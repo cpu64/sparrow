@@ -8,4 +8,12 @@ RUN MAKEFLAGS="-j$(nproc)" pip install --prefer-binary --no-cache-dir --break-sy
 
 COPY ./app/ .
 
+ENV PGDATABASE=sparrow \
+    PGUSER=sparrow \
+    PGPASSWORD=overwriteme \
+    PGHOST=localhost \
+    PGPORT=5432 \
+    FALSK_HOST=0.0.0.0 \
+    FALSK_PORT=5000
+
 CMD ["python", "app.py"]
