@@ -44,3 +44,39 @@ def get_credentials(username):
             cur.close()
         if conn:
             conn.close()
+
+def register_user(username, hashed_password):
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO users (username, password)
+            VALUES (%s, %s)
+        """, (username, hashed_password))
+        conn.commit()
+
+        return False
+
+    except psycopg2.errors.UniqueViolation:
+        if conn:
+            conn.rollback()
+        return "Username already exists."
+
+    except psycopg2.errors.StringDataRightTruncation:
+        if conn:
+            conn.rollback()
+        return "Invalid input length. Please check your username and password."
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Unknown error: {e}")
+        return "Unknown error."
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
