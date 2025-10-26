@@ -1,7 +1,5 @@
 FROM cpu64/python3.13_postgresql
 
-COPY ./db/init/ /db/init/
-
 WORKDIR /app
 
 COPY ./app/requirements.txt .
