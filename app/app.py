@@ -1,5 +1,6 @@
 # app.py
 from flask import Flask, redirect, url_for
+from models.db import init_db
 from controllers.home import home_bp
 import secrets
 import os
@@ -15,5 +16,6 @@ def index():
 
 
 if __name__ == '__main__':
+    init_db()
     app.run(debug=True, host=os.getenv('FALSK_HOST', '0.0.0.0'), port=os.getenv('FALSK_PORT', '5000'))
 
