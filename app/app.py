@@ -1,9 +1,19 @@
-import time
+# app.py
+from flask import Flask, redirect, url_for
+from controllers.home import home_bp
+import secrets
+import os
+
+app = Flask(__name__)
+app.secret_key = secrets.token_hex(32)
+
+app.register_blueprint(home_bp, url_prefix='/home')
+
+@app.route('/')
+def index():
+    return redirect(url_for('home.home'))
 
 
-start_time = time.time()
+if __name__ == '__main__':
+    app.run(debug=True, host=os.getenv('FALSK_HOST', '0.0.0.0'), port=os.getenv('FALSK_PORT', '5000'))
 
-while True:
-    elapsed_time = time.time() - start_time
-    print(f"Elapsed time: {elapsed_time:.2f} seconds", end='\r')  # `\r` for overwriting the same line
-    time.sleep(1)
