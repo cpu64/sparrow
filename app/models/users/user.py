@@ -1,5 +1,6 @@
 # models/users/user.py
 from models.db import get_db_connection
+from datetime import datetime
 
 USER_COLUMN_LENGTHS = {
     "username": [3, 30],
@@ -38,6 +39,43 @@ def get_credentials(username):
     except Exception as e:
         print(f"Error occurred while fetching user credentials: {e}")
         return "Error occurred while fetching user credentials."
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+def mark_login(username, successful):
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        current_time = datetime.utcnow()
+
+        if successful:
+            cur.execute("""
+                UPDATE users
+                SET last_login = %s, last_login_attempt = %s
+                WHERE username = %s;
+            """, (current_time, current_time, username))
+        else:
+            cur.execute("""
+                UPDATE users
+                SET last_login_attempt = %s
+                WHERE username = %s;
+            """, (current_time, username))
+
+        conn.commit()
+        return False
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Error occurred while updating login data: {e}")
+        return "Error occurred while updating login data."
 
     finally:
         if cur:
