@@ -30,4 +30,62 @@
         <a href="{{ url_for('register.register') }}">Register</a>
     </p>
 </body>
+
+  <h2>New div every 0.5 seconds</h2>
+  <div id="container"></div>
+
+<script>
+    const container = document.getElementById('container');
+    let counter = 0;
+
+    async function fetchRandomText() {
+      try {
+        const res = await fetch('https://uselessfacts.jsph.pl/random.json?language=en');
+        const data = await res.json();
+        return data.text;
+      } catch (err) {
+        console.error(err);
+        return 'Error retrieving text';
+      }
+    }
+
+    setInterval(async () => {
+      counter++;
+      const now = new Date();
+      const timeStr = `Time: ${now.toLocaleTimeString()}.${now.getMilliseconds().toString().padStart(3, '0')}`;
+
+      const fact = await fetchRandomText();
+
+      // Create a new div
+      const div = document.createElement('div');
+      const pTime = document.createElement('p');
+      const pFact = document.createElement('p');
+
+      pTime.textContent = timeStr;
+      pFact.textContent = fact;
+
+      div.appendChild(pTime);
+      div.appendChild(pFact);
+      container.appendChild(div);
+
+      // Every n'th run: replace one old div’s text with the new message
+      if (counter % 3 === 0) {
+        const existingDivs = container.querySelectorAll('div');
+        if (existingDivs.length > 1) {
+          // pick a random older div (not the last one)
+          const randomIndex = Math.floor(Math.random() * (existingDivs.length - 1));
+          const targetDiv = existingDivs[randomIndex];
+
+          // replace its content
+          const pElems = targetDiv.querySelectorAll('p');
+          if (pElems.length >= 2) {
+            pElems[0].textContent = timeStr + ' (replaced)';
+            pElems[1].textContent = fact + ' (updated)';
+          }
+        }
+      }
+
+    }, 1000);
+  </script>
+
 </html>
