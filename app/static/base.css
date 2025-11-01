@@ -1,24 +1,35 @@
 :root {
     --primary-color: #1e145e;
     --secondary-color: #160f46;
+    --accent-color: #007bff;
     --font-primary-color: #ffffff;
-    --font-size: 16px;
-    --border-radius: 8px;
+    --border-radius: 10px;
+    --input-bg: #2a1f8a;
+    --input-border: #3b2cb0;
+    --input-focus: #5a45ff;
+    --transition-speed: 0.3s;
 }
 
-body, html {
+html, body {
     height: 100%;
     margin: 0;
     color: var(--font-primary-color);
     background-color: var(--primary-color);
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    align-items: center;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 .flash {
     padding: 10px 15px;
-    margin: 10px 0;
-    border-radius: 4px;
+    margin: 16px 0;
+    border-radius: var(--border-radius);;
     font-weight: bold;
-    font-family: Arial, sans-serif;
+    font-size: 15px;
+    text-align: left;
     max-width: 400px;
 }
 
@@ -40,23 +51,35 @@ body, html {
     border: 1px solid #bee5eb;
 }
 
-.css-toggle-content  { display: none; }
-.css-toggle-switch:checked ~ .css-toggle-content  { display: block; }
+.css-toggle-content {
+    display: none;
+    animation: fadeIn var(--transition-speed) ease;
+}
+.css-toggle-switch:checked ~ .css-toggle-content { display: block; }
 .css-toggle-switch { display: none; }
-.css-toggle-switch + label { cursor: pointer; }
+.css-toggle-switch + label {
+    cursor: pointer;
+    display: inline-block;
+    color: #ddd;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 .action-button {
     padding: 8px 16px;
     background-color: #007bff;
     color: var(--font-primary-color);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
+    transition: background-color var(--transition-speed) ease, transform 0.1s ease;
+    margin: 8px 8px 8px 0px;
     text-align: center;
     display: inline-block;
-    margin-right: 8px;
-    margin-top: 8px;
 }
 
 .action-button:hover {
@@ -64,7 +87,7 @@ body, html {
 }
 
 .action-button:active {
-    background-color: #003366;
+    transform: scale(0.98);
 }
 
 .cancel-button {
@@ -76,7 +99,7 @@ body, html {
 }
 
 .cancel-button:active {
-    background-color: #990000;
+    transform: scale(0.98);
 }
 
 
@@ -110,6 +133,7 @@ body, html {
 }
 
 .edit-icon {
+    display: inline-block;
     cursor: pointer;
     width: 20px;
     height: 20px;
@@ -123,23 +147,24 @@ body, html {
 }
 
 .text-input {
-    padding: 8px 8px;
-    border: 2px solid #000000;
-    border-radius: 8px;
-    background-color: #1e145e;
+    padding: 10px 12px;
+    border: 2px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
     color: var(--font-primary-color);
-    transition: all 0.3s ease;
+    font-size: 15px;
+    transition: all var(--transition-speed) ease;
 }
 
 .text-input::placeholder {
-    color: #e4e4e4;
+    color: #bdbdbd;
     font-style: italic;
 }
 
 .text-input:focus {
-    background-color: #1f088e;
-}
-
-.text-input:focus::placeholder {
-    color: transparent;
+    border-color: var(--input-focus);
+    outline: none;
+    background-color: #fffcc8;
+    color: #000000;
+    box-shadow: 0 0 6px rgba(90, 69, 255, 0.4);
 }
