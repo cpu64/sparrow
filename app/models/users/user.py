@@ -21,6 +21,55 @@ def check_length(key, value):
         return False
     return f"{USER_COLUMN_LENGTHS[key][0]} and {USER_COLUMN_LENGTHS[key][1]}"
 
+def get_data(username, fields):
+    try:
+        columns_to_select = ', '.join(fields)
+        data = get_one(f"""
+            SELECT {columns_to_select}
+            FROM users WHERE username = %s
+        """, (username,))
+        if data:
+            return data
+        return "No such user."
+
+    except Exception as e:
+        print(f"Error occurred while fetching user data: {e}")
+        return "Error occurred while fetching user data."
+
+def update(username, key, value):
+    try:
+        execute(f"""
+                UPDATE users
+                SET {key} = %s, updated_at = %s
+                WHERE username = %s;
+            """, (value, datetime.utcnow(), username))
+    except psycopg2.errors.UniqueViolation:
+        print(f"Already exists.")
+        return "Already exists."
+    except psycopg2.errors.StringDataRightTruncation:
+        print(f"Invalid input length.")
+        return "Invalid input length."
+    except Exception as e:
+        print(f"Unknown error: {e}")
+        return "Unknown error."
+
+def toggle(username, key):
+    try:
+        execute(f"""
+            UPDATE users
+            SET {key} = NOT {key}, updated_at = %s
+            WHERE username = %s;
+        """, (datetime.utcnow(), username))
+    except psycopg2.errors.UndefinedColumn:
+        print(f"Column '{key}' does not exist.")
+        return f"Column '{key}' does not exist."
+    except psycopg2.errors.DatatypeMismatch:
+        print(f"Column '{key}' is not a boolean column.")
+        return f"Column '{key}' is not a boolean column."
+    except Exception as e:
+        print(f"Unknown error: {e}")
+        return "Unknown error."
+
 def get_credentials(username):
     try:
         credentials = get_one("SELECT password, admin, twofa_secret FROM users WHERE username = %s", (username,))

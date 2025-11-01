@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .radio-list {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .radio-list li {
+            margin: 10px 0;
+        }
+
+        .avatar-choice {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .top-container {
+            display: flex;
+            height: auto;
+            align-items: stretch;
+        }
+
+        .left {
+            padding: 20px;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-img {
+            display: block;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+        }
+
+        .edit-icon-container {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+        }
+
+        .right {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .bottom {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="action-button" style="position: fixed; top: 20px; right: 20px;" onclick="window.location.href='/'"> Home </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <input type="checkbox" id="popup-toggle" style="display: none;">
+        <div class="popup">
+            <div class="popup-content">
+                <h2>Select Avatar</h2>
+                <form method="POST" action="{{ request.url }}">
+                    <ul class="radio-list">
+                        {% for avatar in data['avatars'] %}
+                            <li><label>
+                                <input type="radio" name="avatar_id" value="{{avatar.id}}" {% if avatar.name == data['avatar']['name'] %}checked{% endif %}>
+                                <img src="{{ avatar.url }}" alt="{{ avatar.name }}" class="avatar-choice">
+                                {{ avatar.name }}
+                            </label></li>
+                        {% endfor %}
+                    </ul>
+                    <input type="hidden" name="field" value="avatar_id">
+                    <br>
+                    <button type="submit" class="action-button">Save</button>
+                    <label for="popup-toggle" class="action-button cancel-button">Cancel</label>
+                </form>
+            </div>
+        </div>
+
+        <div class="top-container">
+            <div class="left">
+                <div class="avatar-container">
+                    {% if data['avatar'] %}
+                        <div> <img class="profile-img" src="{{ data['avatar']['url'] }}" alt="{{ data['avatar']['name'] }}'s Avatar" width="150" height="150"> </div>
+                    {% else %}
+                        <div> <img class="profile-img" src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}" alt="Default Avatar" width="150" height="150"> </div>
+                    {% endif %}
+                    <label for="popup-toggle" class="edit-icon-container"> <img class="edit-icon" style=" width: 32px; height: 32px;" src="{{ url_for('static', filename='iconmonstr-pencil-lined.svg') }}" alt="Edit Icon"> </label>
+                </div>
+            </div>
+
+            <div class="right">
+                {% for field in data['fields'] %}
+                    <div>
+                        {% if field in ['created_at', 'updated_at', 'last_login' ] %}
+                            <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field].strftime('%Y-%m-%d') if data[field] else '' }}
+                        {% elif field == 'banned' %}
+                            <strong>Status:</strong> {{ 'Banned' if data[field] else 'Active' }}
+                        {% elif field == 'admin' %}
+                            <strong>Account:</strong> {{ 'Admin' if data[field] else 'User' }}
+                        {% else %}
+                            {% if field == 'date_of_birth' %}
+                                <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field].strftime('%Y-%m-%d') if data[field] else '' }}
+                            {% elif field == 'sex' %}
+                                <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ 'Male' if data[field] else 'None' if data[field] is none else 'Female' }}
+                            {% elif field == 'password'%}
+                                <strong>{{ field.replace('_', ' ').capitalize() if data['owner']}}</strong>
+                            {% else %}
+                                <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field] if data[field] else '' }}
+                            {% endif %}
+
+                            {% if data['owner'] %}
+                                <input type="checkbox" id="edit-{{field}}" class="css-toggle-switch" autocomplete="off">
+                                <label for="edit-{{field}}"><img class="edit-icon" src="{{url_for('static', filename='iconmonstr-pencil-lined.svg')}}" alt="Edit Icon"></label>
+                                <div class="css-toggle-content">
+                                    <form method="POST" action="{{ request.url }}">
+                                        {% if field == 'description' %}
+                                            <textarea class="text-input" name="{{field}}" rows="6" cols="60">{{ data[field] if data[field] else '' }}</textarea>
+                                        {% elif field == 'date_of_birth' %}
+                                            <input class="text-input" type="date" name="{{field}}" value="{{ data[field].strftime('%Y-%m-%d') if data[field] else '' }}">
+                                        {% elif field == 'sex' %}
+                                            <label> <input type="radio" name="{{field}}" value="1" {% if data[field] %} checked {% endif %}> Male </label>
+                                            <label style="margin-left: 10px;">
+                                            <input type="radio" name="{{field}}" value="0" {% if not data[field] and data[field] is not none %} checked {% endif %}> Female </label>
+                                        {% elif field == 'password' %}
+                                            <input class="text-input" type="text" name="{{field}}" value="">
+                                        {% else %}
+                                            <input class="text-input" type="text" name="{{field}}" value="{{data[field] if data[field] else ''}}">
+                                        {% endif %}
+                                        <input type="hidden" name="field" value="{{field}}">
+                                        <br>
+                                        <button type="submit" class="action-button">Save</button>
+                                        <label for="edit-{{field}}" class="action-button cancel-button">Cancel</label>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% if data['owner'] %}
+                <div>
+                    <strong>Two-Factor Authentication:</strong>
+                    <input type="checkbox" id="show-twofa_secret" class="css-toggle-switch" autocomplete="off">
+                    <label for="show-twofa_secret"><img class="show-icon" src="{{ url_for('static', filename='iconmonstr-eye-4.svg') }}" alt="Show Icon"></label>
+                    <div class="css-toggle-content">
+                        <form style="display: block;" method="POST" action="{{ request.path }}">
+                                <input type="hidden" name="field" value="toggle_2fa">
+                            {% if data['twofa_secret'] %}
+                                <button type="submit" class="action-button cancel-button">Disable</button>
+                            {% else %}
+                                <button type="submit" class="action-button">Enable</button>
+                            {% endif %}
+                        </form>
+
+                        {% if data['twofa_secret'] %}
+                            <form method="POST" action="{{ request.path }}">
+                                <p>TOTP Secret: {{ data['twofa_secret'] }}</p>
+                                <input type="hidden" name="field" value="twofa_secret">
+                                <button type="submit" class="action-button">New Secret</button>
+                                <label for="show-twofa_secret" class="action-button cancel-button">Cancel</label>
+                            </form>
+                    {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if data['viewer'] == 'admin' %}
+                <div>
+                    <form method="POST" action="{{ request.path }}">
+                        <input type="hidden" name="field" value="toggle_ban">
+                        {% if data['banned'] %}
+                            <button type="submit" class="action-button">Unban</button>
+                        {% else %}
+                            <button type="submit" class="action-button cancel-button">Ban</button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="bottom">
+        </div>
+    </div>
+</body>
+</html>
+
