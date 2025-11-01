@@ -34,8 +34,8 @@ def init_db():
         cur.execute("""
         CREATE TABLE IF NOT EXISTS avatars (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-            name VARCHAR(%(name_length)s) NOT NULL,
-            url TEXT NOT NULL,
+            name VARCHAR(%(name_length)s) UNIQUE NOT NULL,
+            url TEXT UNIQUE NOT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
         );
         """, {'name_length': AVATAR_COLUMN_LENGTHS['name'][1]})
