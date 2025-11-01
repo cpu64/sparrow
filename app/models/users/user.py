@@ -1,5 +1,5 @@
 # models/users/user.py
-from models.db import get_db_connection
+from models.db import execute, get_one
 from datetime import datetime
 
 USER_COLUMN_LENGTHS = {
@@ -22,99 +22,47 @@ def check_length(key, value):
     return f"{USER_COLUMN_LENGTHS[key][0]} and {USER_COLUMN_LENGTHS[key][1]}"
 
 def get_credentials(username):
-    conn = None
-    cur = None
     try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT password, admin, twofa_secret FROM users WHERE username = %s", (username,))
-        user = cur.fetchone()
-
-        if user:
-            columns = [desc[0] for desc in cur.description]
-            user_dict = dict(zip(columns, user))
-            return user_dict
+        credentials = get_one("SELECT password, admin, twofa_secret FROM users WHERE username = %s", (username,))
+        if credentials:
+            return credentials
         return "No such user."
-
     except Exception as e:
         print(f"Error occurred while fetching user credentials: {e}")
         return "Error occurred while fetching user credentials."
 
-    finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()
-
 def mark_login(username, successful):
-    conn = None
-    cur = None
     try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-
         current_time = datetime.utcnow()
-
         if successful:
-            cur.execute("""
+            execute("""
                 UPDATE users
                 SET last_login = %s, last_login_attempt = %s
                 WHERE username = %s;
             """, (current_time, current_time, username))
         else:
-            cur.execute("""
+            execute("""
                 UPDATE users
                 SET last_login_attempt = %s
                 WHERE username = %s;
             """, (current_time, username))
 
-        conn.commit()
-        return False
-
     except Exception as e:
-        if conn:
-            conn.rollback()
         print(f"Error occurred while updating login data: {e}")
         return "Error occurred while updating login data."
 
-    finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()
-
 def register_user(username, hashed_password):
-    conn = None
-    cur = None
     try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("""
+        execute("""
             INSERT INTO users (username, password)
             VALUES (%s, %s)
         """, (username, hashed_password))
-        conn.commit()
-
-        return False
-
     except psycopg2.errors.UniqueViolation:
-        if conn:
-            conn.rollback()
         return "Username already exists."
 
     except psycopg2.errors.StringDataRightTruncation:
-        if conn:
-            conn.rollback()
         return "Invalid input length. Please check your username and password."
 
     except Exception as e:
-        if conn:
-            conn.rollback()
         print(f"Unknown error: {e}")
         return "Unknown error."
-
-    finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()

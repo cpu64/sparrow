@@ -15,6 +15,77 @@ db_params = {
 def get_db_connection():
     return psycopg2.connect(**db_params)
 
+def execute(query, values=()):
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(query, values)
+        conn.commit()
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        raise
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+def get_one(query, values=()):
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(query, values)
+        data = cur.fetchone()
+
+        if data:
+            columns = [desc[0] for desc in cur.description]
+            data_dict = dict(zip(columns, data))
+            return data_dict
+        return None
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        raise
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+def get_all(query, values=()):
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(query, values)
+        data = cur.fetchall()
+
+        if data:
+            columns = [desc[0] for desc in cur.description]
+            data_dict = [dict(zip(columns, i)) for i in data]
+            return data_dict
+        return []
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        raise
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
 def init_db():
     conn = None
     cur = None
