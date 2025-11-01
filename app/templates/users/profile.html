@@ -124,11 +124,11 @@
                 {% for field in data['fields'] %}
                     <div>
                         {% if field in ['created_at', 'updated_at', 'last_login' ] %}
-                            <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field].strftime('%Y-%m-%d') if data[field] else '' }}
+                            <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field].strftime('%Y-%m-%d') if data[field] else '' }} <div class="edit-icon" style="cursor: default"></div>
                         {% elif field == 'banned' %}
-                            <strong>Status:</strong> {{ 'Banned' if data[field] else 'Active' }}
+                            <strong>Status:</strong> {{ 'Banned' if data[field] else 'Active' }} <div class="edit-icon" style="cursor: default"></div>
                         {% elif field == 'admin' %}
-                            <strong>Account:</strong> {{ 'Admin' if data[field] else 'User' }}
+                            <strong>Account:</strong> {{ 'Admin' if data[field] else 'User' }} <div class="edit-icon" style="cursor: default"></div>
                         {% else %}
                             {% if field == 'date_of_birth' %}
                                 <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field].strftime('%Y-%m-%d') if data[field] else '' }}
@@ -164,6 +164,8 @@
                                         <label for="edit-{{field}}" class="action-button cancel-button">Cancel</label>
                                     </form>
                                 </div>
+                            {% elif field != 'password' %}
+                                <div class="edit-icon" style="cursor: default"></div>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -174,6 +176,7 @@
                     <strong>Two-Factor Authentication:</strong>
                     <input type="checkbox" id="show-twofa_secret" class="css-toggle-switch" autocomplete="off">
                     <label for="show-twofa_secret"><img class="show-icon" src="{{ url_for('static', filename='iconmonstr-eye-4.svg') }}" alt="Show Icon"></label>
+                    <div class="edit-icon" style="cursor: default"></div>
                     <div class="css-toggle-content">
                         <form style="display: block;" method="POST" action="{{ request.path }}">
                                 <input type="hidden" name="field" value="toggle_2fa">
@@ -215,4 +218,3 @@
     </div>
 </body>
 </html>
-
