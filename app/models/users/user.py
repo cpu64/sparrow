@@ -6,14 +6,14 @@ USER_COLUMN_LENGTHS = {
     "username": [3, 30],
     "password": [3, 60],
     "twofa_secret": [3, 40],
-    "name": [1, 30],
-    "surname": [1, 30],
-    "email": [1, 60],
-    "description": [1, 1000],
-    "phone_number": [1, 20],
-    "pronouns": [1, 30],
-    "gender": [1, 30],
-    "country": [1, 30]
+    "name": [0, 30],
+    "surname": [0, 30],
+    "email": [0, 60],
+    "description": [0, 1000],
+    "phone_number": [0, 20],
+    "pronouns": [0, 30],
+    "gender": [0, 30],
+    "country": [0, 30]
 }
 
 def check_length(key, value):
