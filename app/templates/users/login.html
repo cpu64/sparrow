@@ -4,30 +4,101 @@
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+        }
+
+        .css-toggle-switch:checked ~ .css-toggle-content {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.08);
+            padding: 40px 50px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            backdrop-filter: blur(6px);
+        }
+
+        h1 {
+            margin-bottom: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        label {
+            text-align: left;
+            margin: 10px 0px;
+            font-size: 0.95rem;
+            color: #e0e0e0;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        label.twofa {
+            cursor: pointer;
+        }
+
+        label.twofa:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Please Log In</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div id="flash-messages">
-        {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %}
-        </div>
-    {% endif %}
-    {% endwith %}
-    <form method="POST" action="{{ url_for('login.login') }}">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Log In</button>
-    </form>
-    <p>
-        Don't have an account?
-        <a href="{{ url_for('register.register') }}">Register</a>
-    </p>
+    <div class="login-container">
+        <h1>Welcome Back</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login.login') }}">
+            <label for="username">Username</label>
+            <input class="text-input" type="text" id="username" name="username" required>
+
+            <label for="password">Password</label>
+            <input class="text-input" type="password" id="password" name="password" required>
+
+            <input type="checkbox" id="twofa-toggle" class="css-toggle-switch" autocomplete="off">
+            <label class="twofa" for="twofa-toggle">Use 2 Factor Authentication</label>
+
+            <div class="css-toggle-content">
+                <input class="text-input" type="text" id="totp" name="totp" placeholder="Enter your TOTP code">
+            </div>
+
+            <button style="margin: 10px 80px;" class="action-button" type="submit">Log In</button>
+        </form>
+
+        <p>Don't have an account? <a href="{{ url_for('register.register') }}">Register</a></p>
+    </div>
 </body>
 </html>
