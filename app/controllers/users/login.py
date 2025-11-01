@@ -7,6 +7,9 @@ login_bp = Blueprint('login', __name__)
 
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if session.get('role', 'guest') != 'guest':
+        return redirect(url_for('home.home'))
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
