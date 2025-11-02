@@ -131,8 +131,8 @@ def init_db():
             updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
             last_login TIMESTAMP,
             last_login_attempt TIMESTAMP,
-            banned BOOLEAN DEFAULT FALSE,
-            admin BOOLEAN DEFAULT FALSE,
+            banned BOOLEAN NOT NULL DEFAULT FALSE,
+            admin BOOLEAN NOT NULL DEFAULT FALSE,
             avatar_id INT REFERENCES avatars(id)
         );
         """, {
