@@ -161,7 +161,9 @@
                     {% else %}
                         <div> <img class="profile-img" src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}" alt="Default Avatar" width="150" height="150"> </div>
                     {% endif %}
+                    {% if data['owner'] %}
                     <label for="popup-toggle" class="edit-icon-container"> <img class="edit-icon" style=" width: 32px; height: 32px;" src="{{ url_for('static', filename='iconmonstr-pencil-lined.svg') }}" alt="Edit Icon"> </label>
+                    {% endif %}
                 </div>
             </div>
 
