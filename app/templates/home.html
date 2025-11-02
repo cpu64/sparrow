@@ -15,5 +15,11 @@
     <a href="{{ url_for('profile.profile', user=username) }}">
         <button>Profile</button>
     </a>
+    {% if role == 'admin' %}
+        <br>
+        <a href="{{ url_for('avatars.avatars') }}">
+            <button>Avatar Managment</button>
+        </a>
+    {% endif %}
 </body>
 </html>
