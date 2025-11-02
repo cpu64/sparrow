@@ -1,3 +1,5 @@
+/* static/base.css */
+
 :root {
     --primary-color: #1e145e;
     --secondary-color: #160f46;
@@ -8,6 +10,10 @@
     --input-border: #3b2cb0;
     --input-focus: #5a45ff;
     --transition-speed: 0.3s;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 html, body {
@@ -69,17 +75,25 @@ a:hover {
 }
 
 .action-button {
-    padding: 8px 16px;
+    padding: 11px 16px 9px 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
     background-color: #007bff;
     color: var(--font-primary-color);
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
     font-size: 16px;
+    font-family: inherit;
+    line-height: 1;
+    font-weight: 400;
     transition: background-color var(--transition-speed) ease, transform 0.1s ease;
     margin: 8px 8px 8px 0px;
-    text-align: center;
-    display: inline-block;
 }
 
 .action-button:hover {
@@ -102,7 +116,6 @@ a:hover {
     transform: scale(0.98);
 }
 
-
 .popup {
     display: none;
     position: fixed;
@@ -114,6 +127,7 @@ a:hover {
     justify-content: center;
     align-items: center;
     overflow: auto;
+    z-index: 9999;
 }
 
 #popup-toggle:checked + .popup {
@@ -124,8 +138,9 @@ a:hover {
     background-color: var(--primary-color);
     padding: 20px;
     border-radius: 5px;
-    width: 300px;
+    max-width: 90%;
     text-align: center;
+    z-index: 10000;
 }
 
 .popup label {

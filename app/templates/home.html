@@ -6,19 +6,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div id="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
     <h1>Welcome {{ username }}!</h1>
     <p>Your role is: {{ role }}</p>
     <a href="{{ url_for('logout.logout') }}">
-        <button>Log out</button>
+        <button class="action-button">Log out</button>
     </a>
     <br>
     <a href="{{ url_for('profile.profile', user=username) }}">
-        <button>Profile</button>
+        <button class="action-button">Profile</button>
     </a>
     {% if role == 'admin' %}
         <br>
         <a href="{{ url_for('avatars.avatars') }}">
-            <button>Avatar Managment</button>
+            <button class="action-button" >Avatar Managment</button>
         </a>
     {% endif %}
 </body>
