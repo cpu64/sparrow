@@ -71,6 +71,27 @@ def toggle(username, key):
         print(f"Unknown error: {e}")
         return "Unknown error."
 
+def toggle_null(username, key, value):
+    try:
+        execute(f"""
+            UPDATE users
+            SET {key} = CASE
+                            WHEN {key} IS NULL THEN %s
+                            ELSE NULL
+                         END,
+                updated_at = %s
+            WHERE username = %s;
+        """, (value, datetime.utcnow(), username))
+    except psycopg2.errors.UndefinedColumn:
+        print(f"Column '{key}' does not exist.")
+        return f"Column '{key}' does not exist."
+    except psycopg2.errors.DatatypeMismatch:
+        print(f"Column '{key}' is not of the expected data type: {data_type}.")
+        return f"Column '{key}' is not of the expected data type: {data_type}."
+    except Exception as e:
+        print(f"Unknown error: {e}")
+        return "Unknown error."
+
 def get_credentials(username):
     try:
         credentials = get_one("SELECT password, admin, twofa_secret FROM users WHERE username = %s", (username,))

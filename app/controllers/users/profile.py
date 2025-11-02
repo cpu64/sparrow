@@ -1,7 +1,8 @@
 # controllers/users/profile.py
 from flask import Blueprint, render_template, request, session, flash, redirect, url_for
-from models.users.user import get_data, check_length, update, toggle
+from models.users.user import get_data, check_length, update, toggle, toggle_null
 from models.users.avatar import get_avatar, get_avatars
+from totp import generate_secret
 
 profile_bp = Blueprint('profile', __name__)
 
@@ -68,8 +69,10 @@ def profile(user):
                 flash(f"{field.replace('_', ' ').capitalize()} must be 1 or 0.", "error")
             elif (err := update(session.get('username'), field, value)):
                 flash(f"{field.replace('_', ' ').capitalize()}: {err}", "error")
-        # elif field == 'toggle_2fa':
-        #     pass
-        # elif field == 'twofa_secret':
-        #     pass
+        elif field == 'toggle_2fa':
+            if (err := toggle_null(session.get('username'), 'twofa_secret', generate_secret())):
+                flash(f"{field.replace('_', ' ').capitalize()}: {err}", "error")
+        elif field == 'twofa_secret':
+            if (err := update(session.get('username'), field, generate_secret())):
+                flash(f"{field.replace('_', ' ').capitalize()}: {err}", "error")
         return redirect(url_for('profile.profile', user=user))

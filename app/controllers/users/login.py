@@ -2,6 +2,7 @@
 import bcrypt
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from models.users.user import check_length, get_credentials, mark_login
+from totp import verify
 
 login_bp = Blueprint('login', __name__)
 
@@ -13,6 +14,7 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        totp = request.form.get('totp')
 
 
         if (err := check_length('username', username)):
@@ -29,7 +31,9 @@ def login():
             flash(response, "error")
             return render_template('users/login.html')
 
-        if bcrypt.checkpw(password.encode('utf-8'), response['password'].encode('utf-8')):
+        password_is_valid = bcrypt.checkpw(password.encode('utf-8'), response['password'].encode('utf-8'))
+        twofa_is_valid = not response['twofa_secret'] or verify(totp, response['twofa_secret'])
+        if password_is_valid and twofa_is_valid:
             if (err := mark_login(username, True)):
                 flash(err, "error")
                 return render_template('users/login.html')
