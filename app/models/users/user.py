@@ -1,6 +1,7 @@
 # models/users/user.py
 from models.db import execute, get_one
 from datetime import datetime
+import psycopg2
 
 USER_COLUMN_LENGTHS = {
     "username": [3, 30],
