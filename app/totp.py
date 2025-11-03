@@ -4,12 +4,22 @@ import hmac
 import struct
 import time
 import hashlib
+import qrcode
+from qrcode.image.svg import SvgImage
 
 issuer = "Sparrow"
 algorithm = hashlib.sha1
 chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 period = 30
 digits = 6
+
+def totp_qr(url):
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=20, border=0 )
+    qr.add_data(url)
+    qr.make(fit=True)
+    img = qr.make_image(image_factory=SvgImage)
+    svg = img.to_string().decode("utf-8").replace('<svg:', '<').replace('</svg:', '</')
+    return svg
 
 def totp_url(user, secret):
     return f"otpauth://totp/{issuer}:{user}?secret={secret}&issuer={issuer}&algorithm={algorithm().name.upper()}&digits={digits}&period={period}"

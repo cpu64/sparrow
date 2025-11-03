@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, request, session, flash, redirect, url_for
 from models.users.user import get_data, check_length, update, toggle, toggle_null
 from models.users.avatar import get_avatar, get_avatars
-from totp import generate_secret
+from totp import generate_secret, totp_url, totp_qr
 
 profile_bp = Blueprint('profile', __name__)
 
@@ -21,6 +21,7 @@ def profile(user):
         data['viewer'] = session.get('role', 'guest')
         data['avatars'] = get_avatars()
         data['fields'] = fields
+        data['twofa_qr'] = totp_qr(totp_url(data.get('username', ''), data.get('twofa_secret', '')))
 
         return render_template('users/profile.html', data=data)
 
