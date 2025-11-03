@@ -19,9 +19,10 @@ def profile(user):
         data['avatar'] = avatar if not isinstance(avatar, str) else None
         data['owner'] = (session.get('username') == data.get('username', ''))
         data['viewer'] = session.get('role', 'guest')
-        data['avatars'] = get_avatars()
         data['fields'] = fields
-        data['twofa_qr'] = totp_qr(totp_url(data.get('username', ''), data.get('twofa_secret', '')))
+        if data['owner']:
+            data['avatars'] = get_avatars()
+            data['twofa_qr'] = totp_qr(totp_url(data.get('username', ''), data.get('twofa_secret', '')))
 
         return render_template('users/profile.html', data=data)
 
