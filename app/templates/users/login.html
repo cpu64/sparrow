@@ -3,32 +3,52 @@
 <html>
 <head>
     <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <style>
+        label.twofa {
+            cursor: pointer;
+        }
+
+        label.twofa:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Please Log In</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div id="flash-messages">
-        {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %}
-        </div>
-    {% endif %}
-    {% endwith %}
-    <form method="POST" action="{{ url_for('login.login') }}">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Log In</button>
-    </form>
-    <p>
-        Don't have an account?
-        <a href="{{ url_for('register.register') }}">Register</a>
-    </p>
+    <div class="login-container">
+        <h1>Welcome Back</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login.login') }}">
+            <label for="username">Username</label>
+            <input class="text-input" type="text" id="username" name="username" required>
+
+            <label for="password">Password</label>
+            <input class="text-input" type="password" id="password" name="password" required>
+
+            <input type="checkbox" id="twofa-toggle" class="css-toggle-switch" autocomplete="off">
+            <label class="twofa" for="twofa-toggle">Use 2 Factor Authentication</label>
+
+            <div class="css-toggle-content">
+                <input class="text-input" type="text" id="totp" name="totp" placeholder="Enter your TOTP code">
+            </div>
+
+            <button style="margin: 10px 80px;" class="action-button" type="submit">Log In</button>
+        </form>
+
+        <p>Don't have an account? <a href="{{ url_for('register.register') }}">Register</a></p>
+    </div>
 </body>
 
   <h2>New div every 0.5 seconds</h2>

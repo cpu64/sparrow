@@ -2,14 +2,20 @@
 import bcrypt
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from models.users.user import check_length, get_credentials, mark_login
+from totp import verify, period
+from datetime import datetime, timedelta
 
 login_bp = Blueprint('login', __name__)
 
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if session.get('role', 'guest') != 'guest':
+        return redirect(url_for('home.home'))
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        totp = request.form.get('totp')
 
 
         if (err := check_length('username', username)):
@@ -26,15 +32,21 @@ def login():
             flash(response, "error")
             return render_template('users/login.html')
 
-        if bcrypt.checkpw(password.encode('utf-8'), response['password'].encode('utf-8')):
+        password_is_valid = bcrypt.checkpw(password.encode('utf-8'), response['password'].encode('utf-8'))
+        new_totp = datetime.utcnow() - response['last_login'] > timedelta(seconds=period)
+        twofa_is_valid = not response['twofa_secret'] or (new_totp and verify(totp, response['twofa_secret']))
+        print(password_is_valid, new_totp, twofa_is_valid)
+        if password_is_valid and twofa_is_valid:
             if (err := mark_login(username, True)):
                 flash(err, "error")
                 return render_template('users/login.html')
             session['username'] = username
             session['role'] = 'admin' if response['admin'] else 'user'
             return redirect(url_for('home.home'))
-
-        flash("Invalid credentials, please try again.", "error")
+        if new_totp:
+            flash("Invalid credentials, please try again.", "error")
+        else:
+            flash(f"The 2FA code has been used up, wait {period}s.", "error")
         if (err := mark_login(username, False)):
             flash(err, "error")
             return render_template('users/login.html')

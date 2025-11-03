@@ -1,0 +1,156 @@
+<!-- templates/users/avatars.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Avatars</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .top-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .top-container > div:first-child {
+            flex-grow: 1;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--input-border);
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color var(--transition-speed) ease, transform 0.2s ease;
+        }
+
+        li form {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        li:hover {
+            background-color: var(--input-bg);
+            transform: translateY(-2px);
+        }
+
+        .avatar-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        .avatar-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .avatar-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--font-primary-color);
+        }
+
+        .avatar-url {
+            font-size: 14px;
+            color: #cccccc;
+            word-break: break-all;
+        }
+
+        li img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--input-border);
+            object-fit: cover;
+            background-color: #fff;
+        }
+
+        .add-form {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--input-border);
+        }
+
+        .add-form label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        .add-form .text-input {
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        .remove-form {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-container">
+        <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <form class="add-form" method="POST" action="{{ url_for('avatars.avatars') }}">
+            <label for="name">Name:</label>
+            <input class="text-input" type="text" id="name" name="name" required autocomplete="off">
+            <br>
+            <label for="url">URL:</label>
+            <input class="text-input" style="width: 100%;" type="text" id="url" name="url" required autocomplete="off">
+            <br>
+            <button class="action-button" type="submit">Add</button>
+        </form>
+        </div>
+
+        <div class="action-button" style="margin-left: 20px;" onclick="window.location.href='/'"> Home </div>
+    </div>
+
+    <ul>
+        {% for avatar in avatars %}
+            <li>
+                <div class="avatar-info">
+                    <img src="{{ avatar.url }}" alt="{{ avatar.name }}">
+                    <div class="avatar-text">
+                        <span class="avatar-name">{{ avatar.name }}</span>
+                        <span class="avatar-url">{{ avatar.url }}</span>
+                    </div>
+                </div>
+                <form class="remove-form" method="POST" action="{{ url_for('avatars.remove_avatar') }}" style="display:inline;">
+                    <input type="hidden" name="avatar_name" value="{{ avatar.name }}">
+                    <button class="action-button cancel-button" type="submit">Remove</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

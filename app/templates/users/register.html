@@ -3,31 +3,35 @@
 <html>
 <head>
     <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
 </head>
 <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div id="flash-messages">
-        {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %}
-        </div>
-    {% endif %}
-    {% endwith %}
-    <form method="POST" action="{{ url_for('register.register') }}">
-        <label>Username:</label>
-        <input type="text" name="username" required><br>
+    <div class="login-container">
+        <h1>Register</h1>
 
-        <label>Password:</label>
-        <input type="password" name="password" required><br>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
 
-        <button type="submit">Register</button>
-    </form>
+        <form method="POST" action="{{ url_for('register.register') }}">
+            <label for="username">Username</label>
+            <input class="text-input" type="text" id="username" name="username" required>
 
-    <p>
-        Already have an account?
-        <a href="{{ url_for('login.login') }}">Log in</a>
-    </p>
+            <label for="password">Password</label>
+            <input class="text-input" type="password" id="password" name="password" required>
+
+            <button style="margin: 10px 80px;" class="action-button" type="submit">Create account</button>
+        </form>
+
+        <p>Already have an account? <a href="{{ url_for('login.login') }}">Log in</a></p>
+    </div>
 </body>
 </html>

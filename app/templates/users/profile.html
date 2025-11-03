@@ -1,0 +1,267 @@
+<!-- templates/users/profile.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .radio-list {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+            padding: 0px 20px;
+        }
+
+        .radio-list input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+
+        .avatar-wrapper {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 20px;
+            margin: 10px 0;
+            width: 100%;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            border: 2px solid var(--input-border);
+            font-weight: bold;
+            transition: background-color var(--transition-speed) ease, transform 0.2s ease;
+        }
+
+        .avatar-wrapper:hover {
+            background-color: var(--input-bg);
+            transform: translateY(-2px);
+        }
+
+        input[type="radio"]:checked + .avatar-wrapper {
+            border-color: var(--accent-color);
+            background-color: var(--input-bg);
+        }
+
+        .avatar-choice {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+            vertical-align: middle;
+            border-radius: 50%;
+            border: 2px solid var(--input-border);
+            object-fit: cover;
+        }
+
+        .top-container {
+            display: flex;
+            height: auto;
+            align-items: stretch;
+        }
+
+        @media (max-width: 768px) {
+            .top-container {
+                flex-direction: column;
+            }
+        }
+
+        .left {
+            padding: 20px;
+        }
+
+        .right {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-img {
+            display: block;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+        }
+
+        .edit-icon-container {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+        }
+
+        .text-input {
+            margin-top: 10px;
+        }
+
+        .bottom {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="action-button" style="position: fixed; top: 20px; right: 20px;" onclick="window.location.href='/'"> Home </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <input type="checkbox" id="popup-toggle" style="display: none;">
+        <div class="popup">
+            <div class="popup-content">
+                <h2>Select Avatar</h2>
+                <form method="POST" action="{{ request.url }}">
+                    <ul class="radio-list">
+                        {% for avatar in data['avatars'] %}
+                            <li>
+                                <input type="radio" name="avatar_id" id="{{avatar.id}}" value="{{avatar.id}}" {% if avatar.name == data['avatar']['name'] %}checked{% endif %}>
+                                <label class="avatar-wrapper" for="{{avatar.id}}">
+                                    <img src="{{ avatar.url }}" alt="{{ avatar.name }}" class="avatar-choice">
+                                    <span>{{ avatar.name }}</span>
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <input type="hidden" name="field" value="avatar_id">
+                    <br>
+                    <button type="submit" class="action-button">Save</button>
+                    <label for="popup-toggle" class="action-button cancel-button">Cancel</label>
+                </form>
+            </div>
+        </div>
+
+        <div class="top-container">
+            <div class="left">
+                <div class="avatar-container">
+                    {% if data['avatar'] %}
+                        <div> <img class="profile-img" src="{{ data['avatar']['url'] }}" alt="{{ data['avatar']['name'] }}'s Avatar" width="150" height="150"> </div>
+                    {% else %}
+                        <div> <img class="profile-img" src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}" alt="Default Avatar" width="150" height="150"> </div>
+                    {% endif %}
+                    {% if data['owner'] %}
+                    <label for="popup-toggle" class="edit-icon-container"> <img class="edit-icon" style=" width: 32px; height: 32px;" src="{{ url_for('static', filename='iconmonstr-pencil-lined.svg') }}" alt="Edit Icon"> </label>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="right">
+                {% for field in data['fields'] %}
+                    <div>
+                        {% if field in ['created_at', 'updated_at', 'last_login' ] %}
+                            <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field].strftime('%Y-%m-%d') if data[field] else '' }} <div class="edit-icon" style="cursor: default"></div>
+                        {% elif field == 'banned' %}
+                            <strong>Status:</strong> {{ 'Banned' if data[field] else 'Active' }} <div class="edit-icon" style="cursor: default"></div>
+                        {% elif field == 'admin' %}
+                            <strong>Account:</strong> {{ 'Admin' if data[field] else 'User' }} <div class="edit-icon" style="cursor: default"></div>
+                        {% else %}
+                            {% if field == 'date_of_birth' %}
+                                <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field].strftime('%Y-%m-%d') if data[field] else '' }}
+                            {% elif field == 'sex' %}
+                                <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ 'Male' if data[field] else 'None' if data[field] is none else 'Female' }}
+                            {% elif field == 'password'%}
+                                <strong>{{ field.replace('_', ' ').capitalize() if data['owner']}}</strong>
+                            {% else %}
+                                <strong>{{ field.replace('_', ' ').capitalize() }}:</strong> {{ data[field] if data[field] else '' }}
+                            {% endif %}
+
+                            {% if data['owner'] %}
+                                <input type="checkbox" id="edit-{{field}}" class="css-toggle-switch" autocomplete="off">
+                                <label for="edit-{{field}}"><img class="edit-icon" src="{{url_for('static', filename='iconmonstr-pencil-lined.svg')}}" alt="Edit Icon"></label>
+                                <div class="css-toggle-content">
+                                    <form method="POST" action="{{ request.url }}">
+                                        {% if field == 'description' %}
+                                            <textarea class="text-input" name="{{field}}" rows="6" cols="60">{{ data[field] if data[field] else '' }}</textarea>
+                                        {% elif field == 'date_of_birth' %}
+                                            <input class="text-input" type="date" name="{{field}}" value="{{ data[field].strftime('%Y-%m-%d') if data[field] else '' }}">
+                                        {% elif field == 'sex' %}
+                                            <label> <input style="margin-top: 10px;" type="radio" name="{{field}}" value="1" {% if data[field] %} checked {% endif %}> Male </label>
+                                            <label style="margin-left: 10px;">
+                                            <input type="radio" name="{{field}}" value="0" {% if not data[field] and data[field] is not none %} checked {% endif %}> Female </label>
+                                        {% elif field == 'password' %}
+                                            <input class="text-input" type="text" name="{{field}}" value="">
+                                        {% else %}
+                                            <input class="text-input" type="text" name="{{field}}" value="{{data[field] if data[field] else ''}}">
+                                        {% endif %}
+                                        <input type="hidden" name="field" value="{{field}}">
+                                        <br>
+                                        <button type="submit" class="action-button">Save</button>
+                                        <label for="edit-{{field}}" class="action-button cancel-button">Cancel</label>
+                                    </form>
+                                </div>
+                            {% elif field != 'password' %}
+                                <div class="edit-icon" style="cursor: default"></div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% if data['owner'] %}
+                <div>
+                    <strong>Two-Factor Authentication:</strong>
+                    <input type="checkbox" id="show-twofa_secret" class="css-toggle-switch" autocomplete="off">
+                    <label for="show-twofa_secret"><img class="show-icon" src="{{ url_for('static', filename='iconmonstr-eye-4.svg') }}" alt="Show Icon"></label>
+                    <div class="edit-icon" style="cursor: default"></div>
+                    <div class="css-toggle-content">
+                        <form style="display: block;" method="POST" action="{{ request.path }}">
+                                <input type="hidden" name="field" value="toggle_2fa">
+                            {% if data['twofa_secret'] %}
+                                <button type="submit" class="action-button cancel-button">Disable</button>
+                            {% else %}
+                                <button type="submit" class="action-button">Enable</button>
+                            {% endif %}
+                        </form>
+
+                        {% if data['twofa_secret'] %}
+                            <form method="POST" action="{{ request.path }}">
+                                <strong>TOTP Secret:</strong> <span>{{ data['twofa_secret'] }}</span> <br>
+                                {{ data['twofa_qr']|safe }} <br>
+                                <input type="hidden" name="field" value="twofa_secret">
+                                <button type="submit" class="action-button">New Secret</button>
+                            </form>
+                    {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if data['viewer'] == 'admin' %}
+                <div>
+                    <form method="POST" action="{{ request.path }}">
+                        <input type="hidden" name="field" value="toggle_ban">
+                        {% if data['banned'] %}
+                            <button type="submit" class="action-button">Unban</button>
+                        {% else %}
+                            <button type="submit" class="action-button cancel-button">Ban</button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="bottom">
+        </div>
+    </div>
+</body>
+</html>

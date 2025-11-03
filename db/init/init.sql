@@ -3,8 +3,8 @@ SET search_path TO sparrow;
 
 CREATE TABLE IF NOT EXISTS avatars (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name VARCHAR(30) NOT NULL,
-    url TEXT NOT NULL,
+    name VARCHAR(30) UNIQUE NOT NULL,
+    url TEXT UNIQUE NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
 );
 
@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
     last_login TIMESTAMP,
     last_login_attempt TIMESTAMP,
-    banned BOOLEAN DEFAULT FALSE,
-    admin BOOLEAN DEFAULT FALSE,
+    banned BOOLEAN NOT NULL DEFAULT FALSE,
+    admin BOOLEAN NOT NULL DEFAULT FALSE,
     avatar_id INT REFERENCES avatars(id)
 );
 
@@ -48,7 +48,7 @@ INSERT INTO users (
     (
         'admin',
         '$2b$12$VEUlGiag6gJv.S6i51/i3Ov00lICVZsK37xVwA/1wC5KBVvJItgUK', --admin
-        'A1B2C3D4E5',
+        NULL,
         'Avery',
         'Stone',
         'avery.stone@example.com',
@@ -88,7 +88,7 @@ INSERT INTO users (
     (
         'bbb',
         '$2b$12$gZWy1JhHy.SaMjVBlgs0zOz2AT.h8AI8ekaYyVlu1OVGZ.j28ZMA2', --bbb
-        'Z9Y8X7W6V5',
+        'G62SY3MV3MUS3F3ZT2BGAPTG7LGAR7TP',
         'Noah',
         'Kim',
         'noah.kim@example.com',
