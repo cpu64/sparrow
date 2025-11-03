@@ -12,15 +12,7 @@
     <div class="login-container">
         <h1>Register</h1>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div id="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% endwith %}
+        {% include 'includes/flash_messages.html' %}
 
         <form method="POST" action="{{ url_for('register.register') }}">
             <label for="username">Username</label>
