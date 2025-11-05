@@ -33,9 +33,10 @@ def login():
             return render_template('users/login.html')
 
         password_is_valid = bcrypt.checkpw(password.encode('utf-8'), response['password'].encode('utf-8'))
+        response['last_login'] = response['last_login'] if response['last_login'] else datetime.utcfromtimestamp(0)
         new_totp = datetime.utcnow() - response['last_login'] > timedelta(seconds=period)
         twofa_is_valid = not response['twofa_secret'] or (new_totp and verify(totp, response['twofa_secret']))
-        print(password_is_valid, new_totp, twofa_is_valid)
+
         if password_is_valid and twofa_is_valid:
             if (err := mark_login(username, True)):
                 flash(err, "error")
