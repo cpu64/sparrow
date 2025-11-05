@@ -9,8 +9,5 @@ __image_comments = [
     },
 ]
 
-def get_image_comment():
-    return __image_comments[0]
-
 def get_image_comments():
     return __image_comments
