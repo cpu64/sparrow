@@ -1,0 +1,16 @@
+__image_comments = [
+    {
+        "name": "Amazing!",
+        "created_at": "2025-11-01",
+    },
+    {
+        "name": "RAID: Shadow Legends™ is an immersive online experience with everything you'd expect from a brand new RPG title. It's got an amazing storyline, awesome 3D graphics, giant boss fights, PVP battles, and hundreds of never before seen champions to collect and customize.",
+        "created_at": "2025-11-01",
+    },
+]
+
+def get_image_comment():
+    return __image_comments[0]
+
+def get_image_comments():
+    return __image_comments
