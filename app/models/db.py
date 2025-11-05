@@ -121,7 +121,7 @@ def init_db():
             surname VARCHAR(%(surname_length)s),
             email VARCHAR(%(email_length)s),
             description VARCHAR(%(description_length)s),
-            date_of_birth TIMESTAMP,
+            date_of_birth DATE,
             phone_number VARCHAR(%(phone_number_length)s),
             pronouns VARCHAR(%(pronouns_length)s),
             sex BOOLEAN,
