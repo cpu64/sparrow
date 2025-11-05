@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, session, flash, redirect,
 from models.users.user import get_data, check_length, update, toggle, toggle_null
 from models.users.avatar import get_avatar, get_avatars
 from totp import generate_secret, totp_url, totp_qr
+import bcrypt
 
 profile_bp = Blueprint('profile', __name__)
 
