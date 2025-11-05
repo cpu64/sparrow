@@ -32,8 +32,8 @@ def profile(user):
 
         if field == 'toggle_ban':
             if session.get('role', 'guest') != 'admin':
-                flash(f"You do not have permission to ban people.", "error")
-            elif (err := toggle(session.get('username'), 'banned')):
+                flash(f"You do not have permission to ban/unban people.", "error")
+            elif (err := toggle(user, 'banned')):
                 flash(f"{field.replace('_', ' ').capitalize()}: {err}", "error")
             return redirect(url_for('profile.profile', user=user))
 
