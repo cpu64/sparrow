@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Post Feed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .post-feed {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .post {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .post-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-author {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .post-date {
+            font-size: 13px;
+            color: #bdbdbd;
+        }
+
+        .post-content {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: var(--font-primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="{{ url_for('home.home') }}">
+            <button class="action-button">Home</button>
+        </a>
+        <a href="{{ url_for('createpost.create_post') }}">
+            <button class="action-button">Create Post</button>
+        </a>
+    </div>
+    
+    <div class="post-feed">
+        <h1>Post Feed</h1>
+        {% for post in posts %}
+        <div class="post">
+            <div class="post-header">
+                <img src="https://avatar.iran.liara.run/public/6" 
+                     alt="{{ post.author }}'s avatar"
+                     onerror="this.src='{{ url_for('static', filename='avatars/default.png') }}'">
+                <div class="post-info">
+                    <div class="post-author">{{ post.author }}</div>
+                    <div class="post-date">{{ post.created_at }}</div>
+                </div>
+            </div>
+            <div class="post-content" style="color: {{ post.text_color }}; font-family: {{ post.text_font }};">
+                {{ post.text }}
+            </div>
+            <a href="{{ url_for('viewpost.view_post', post_id=loop.index0) }}">
+                <button class="action-button">View Post</button>
+            </a>
+        </div>
+        {% else %}
+        <p>No posts available.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
