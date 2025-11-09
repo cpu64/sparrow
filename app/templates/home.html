@@ -24,11 +24,12 @@
     <br>
     <a href="{{ url_for('postfeed.postfeed') }}">
         <button class="action-button">View Posts</button>
-        <br>
-        <a href="{{ url_for('dms.dms') }}">
-            <button class="action-button">Direct messages</button>
-        </a>
-        {% if role == 'admin' %}
+    </a>
+    <br>
+    <a href="{{ url_for('dms.dms') }}">
+        <button class="action-button">Direct messages</button>
+    </a>
+    {% if role == 'admin' %}
         <br>
         <a href="{{ url_for('avatars.avatars') }}">
             <button class="action-button">Avatar Management</button>

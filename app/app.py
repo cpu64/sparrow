@@ -11,6 +11,7 @@ from controllers.users.profile import profile_bp
 from controllers.users.register import register_bp
 from controllers.dms.dms import dms_blueprint
 from controllers.posts.posts import postfeed_bp, createpost_bp, viewpost_bp
+from controllers.dms.dms import dms_blueprint
 import secrets
 import os
 
