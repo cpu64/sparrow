@@ -1,156 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Post: {{ post.text.split()[:5]|join(' ') }}{% if post.text.split()|length > 5 %}...{% endif %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-
-    <style>
-        body {
-            padding: 20px;
-        }
-
-        .post-container {
-            max-width: 800px;
-            margin: auto;
-        }
-
-        .card {
-            background-color: var(--secondary-color);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .post-header img,
-        .comment-header img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .comment-header img {
-            width: 40px;
-            height: 40px;
-        }
-
-        .post-author,
-        .comment-author {
-            font-weight: bold;
-        }
-
-        .post-date,
-        .comment-date {
-            font-size: 14px;
-            color: #bdbdbd;
-        }
-
-        .post-content {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-top: 20px;
-            color: var(--font-primary-color);
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 25px;
-        }
-
-        .comments-section {
-            margin-top: 30px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height var(--transition-speed) ease;
-        }
-
-        .comments-section.active {
-            max-height: 2000px;
-        }
-
-        .comment,
-        .comment-form {
-            background-color: var(--input-bg);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .comment-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .comment-delete-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 5px 12px;
-            font-size: 12px;
-        }
-
-        .comment-text {
-            font-size: 15px;
-            color: var(--font-primary-color);
-            margin-left: 52px;
-        }
-
-        .comment-form textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid var(--input-border);
-            border-radius: var(--border-radius);
-            background-color: var(--secondary-color);
-            color: var(--font-primary-color);
-            font-size: 15px;
-            resize: vertical;
-            min-height: 80px;
-            font-family: inherit;
-            transition: all var(--transition-speed) ease;
-        }
-
-        .comment-form textarea:focus {
-            border-color: var(--input-focus);
-            outline: none;
-            box-shadow: 0 0 6px rgba(90, 69, 255, 0.4);
-        }
-
-        .delete-button {
-            background-color: #dc3545;
-        }
-
-        .delete-button:hover {
-            background-color: #c82333;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
 </head>
 
 <body>
     <div class="post-container card">
-
         <a href="{{ url_for('postfeed.postfeed') }}">
             <button class="action-button">Back to the Feed</button>
         </a>
 
         <div class="post-header">
-            <img src="https://avatar.iran.liara.run/public/6"
-                 alt="{{ post.author }}'s avatar"
-                 onerror="this.src='{{ url_for('static', filename='avatars/default.png') }}'">
+            <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar"
+                onerror="this.src='{{ url_for('static', filename='avatars/default.png') }}'">
             <div>
                 <div class="post-author">{{ post.author }}</div>
                 <div class="post-date">{{ post.created_at }}</div>
@@ -161,20 +27,25 @@
             {{ post.text }}
         </div>
 
+        {% if post.tags %}
+        <div class="post-tags">
+            {% for tag in post.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="post-actions">
             <button class="action-button toggle-comments-btn" onclick="toggleComments()">
                 View Comments ({{ comments|length }})
             </button>
-
             <button class="action-button delete-button" onclick="deletePost()">
                 Delete Post
             </button>
-
         </div>
 
         <div class="comments-section" id="commentsSection">
             <h2>Comments</h2>
-
             <form method="POST" class="comment-form">
                 <textarea name="comment_text" placeholder="Write your comment..." required></textarea>
                 <button type="submit" class="action-button">Post Comment</button>
@@ -182,13 +53,13 @@
 
             {% for comment in comments %}
             <div class="comment">
-                <button class="action-button delete-button comment-delete-btn" onclick="deleteComment('{{ comment.id }}')">
-                     Delete
+                <button class="action-button delete-button comment-delete-btn"
+                    onclick="deleteComment('{{ comment.id }}')">
+                    Delete
                 </button>
                 <div class="comment-header">
-                    <img src="https://avatar.iran.liara.run/public/6"
-                         alt="{{ comment.author }}'s avatar"
-                         onerror="this.src='{{ url_for('static', filename='avatars/default.png') }}'">
+                    <img src="https://avatar.iran.liara.run/public/6" alt="{{ comment.author }}'s avatar"
+                        onerror="this.src='{{ url_for('static', filename='avatars/default.png') }}'">
                     <div>
                         <div class="comment-author">{{ comment.author }}</div>
                         <div class="comment-date">{{ comment.created_at }}</div>
@@ -231,4 +102,5 @@
         }
     </script>
 </body>
+
 </html>
