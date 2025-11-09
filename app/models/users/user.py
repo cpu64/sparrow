@@ -94,7 +94,7 @@ def toggle_null(username, key, value):
 
 def get_credentials(username):
     try:
-        credentials = get_one("SELECT password, admin, twofa_secret, last_login FROM users WHERE username = %s", (username,))
+        credentials = get_one("SELECT password, admin, twofa_secret, last_login, banned FROM users WHERE username = %s", (username,))
         if credentials:
             return credentials
         return "No such user."

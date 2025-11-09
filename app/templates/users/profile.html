@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>User Profile</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.svg') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <style>
@@ -24,7 +25,6 @@
             opacity: 0;
             pointer-events: none;
         }
-
 
         .avatar-wrapper {
             display: inline-flex;
@@ -119,15 +119,7 @@
 
         <div class="action-button" style="position: fixed; top: 20px; right: 20px;" onclick="window.location.href='/'"> Home </div>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div id="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">{{ message }}</div>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+        {% include 'includes/flash_messages.html' %}
 
         <input type="checkbox" id="popup-toggle" style="display: none;">
         <div class="popup">

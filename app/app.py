@@ -1,6 +1,8 @@
 # app.py
-from flask import Flask, redirect, url_for, session
+from flask import Flask, redirect, url_for, session, flash
+from datetime import datetime, timezone, timedelta
 from models.db import init_db
+from models.users.user import get_data
 from controllers.home import home_bp
 from controllers.users.login import login_bp
 from controllers.users.logout import logout_bp
@@ -26,6 +28,20 @@ app.register_blueprint(dms_blueprint, url_prefix='/dms')
 def ensure_default_session():
     if 'role' not in session:
         session['role'] = 'guest'
+    if session['role'] != 'guest':
+        if 'last_check' in session:
+            if datetime.utcnow().replace(tzinfo=timezone.utc) - session['last_check'].replace(tzinfo=timezone.utc) > timedelta(minutes=1):
+                data = get_data(session.get('username'), ['banned'])
+                if isinstance(data, str):
+                    flash(data, "error")
+                    return redirect(url_for('login.login'))
+                if data['banned']:
+                    session.clear()
+                    flash('You have been banned.', "error")
+                    return redirect(url_for('login.login'))
+                session['last_check'] = datetime.utcnow().replace(tzinfo=timezone.utc)
+        else:
+            session['last_check'] = datetime.fromtimestamp(0, timezone.utc).replace(tzinfo=timezone.utc)
 
 @app.route('/')
 def index():
