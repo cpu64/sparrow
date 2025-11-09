@@ -34,7 +34,9 @@
         {% for post in posts %}
         <div class="post">
             <div class="post-header">
-                <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar">
+                <a href="{{ url_for('profile.profile', user=post.author) }}" title="View {{ post.author }}'s profile">
+                    <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar">
+                </a>
                 <div class="post-info">
                     <div class="post-author">{{ post.author }}</div>
                     <div class="post-date">{{ post.created_at }}</div>
