@@ -1,12 +1,14 @@
 <!-- templates/home.html -->
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Home</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.svg') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
 </head>
+
 <body>
     {% include 'includes/flash_messages.html' %}
 
@@ -22,11 +24,17 @@
     <br>
     <a href="{{ url_for('postfeed.postfeed') }}">
         <button class="action-button">View Posts</button>
+    </a>
+    <br>
+    <a href="{{ url_for('dms.dms') }}">
+        <button class="action-button">Direct messages</button>
+    </a>
     {% if role == 'admin' %}
         <br>
         <a href="{{ url_for('avatars.avatars') }}">
-            <button class="action-button" >Avatar Managment</button>
+            <button class="action-button">Avatar Management</button>
         </a>
     {% endif %}
 </body>
+
 </html>
