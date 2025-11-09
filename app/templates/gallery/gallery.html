@@ -12,17 +12,13 @@
         .card-img-top { height: 220px; object-fit: cover; }
         .card-title { color: #fff; }
         .card-text { color: #b5b5b5; }
+        .form-control, .form-control:focus { background-color: var(--input-bg); color: var(--font-primary-color); border-color: var(--input-border); }
+        .form-control:focus { background-color: #fffcc8; color: #000000; border-color: var(--input-focus); }
     </style>
 </head>
 <body>
     <div class="container py-5">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+        {% include 'includes/flash_messages.html' %}
 
         <div class="p-4 mb-5 rounded shadow-lg bg-dark bg-opacity-50 border border-secondary">
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
@@ -33,12 +29,16 @@
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ url_for('gallery.list_galleries') }}" class="btn btn-primary">Galleries</a>
-                    <a href="/" class="btn btn-outline-light">Home</a>
                 </div>
             </div>
         </div>
 
-        <h3 class="text-white fw-semibold mb-4 pb-2 border-bottom border-primary border-3">Images</h3>
+        <h3 class="text-white fw-semibold mb-4 pb-2 border-bottom border-primary border-3 d-flex justify-content-between align-items-center">
+            <span>Images</span>
+            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addImageModal">
+                + Add Image
+            </button>
+        </h3>
         <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
             {% for image in images %}
             <div class="col">
@@ -56,5 +56,9 @@
             {% endfor %}
         </div>
     </div>
+
+    {% include 'gallery/image_form_dialog.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

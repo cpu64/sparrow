@@ -1,0 +1,31 @@
+<!-- Add Gallery Modal Dialog -->
+<div class="modal fade" id="addGalleryModal" tabindex="-1" aria-labelledby="addGalleryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: var(--secondary-color); border: 1px solid var(--input-border);">
+      <div class="modal-header" style="border-bottom: 1px solid var(--input-border);">
+        <h5 class="modal-title text-white" id="addGalleryModalLabel">Add New Gallery</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="galleryForm">
+          <div class="mb-3">
+            <label for="galleryName" class="form-label text-white">Gallery Name</label>
+            <input type="text" class="form-control" id="galleryName" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="galleryDescription" class="form-label text-white">Description</label>
+            <textarea class="form-control" id="galleryDescription" name="description" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="galleryColor" class="form-label text-white">Background Color</label>
+            <input type="color" class="form-control form-control-color" id="galleryColor" name="background_color" value="#00aa55" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid var(--input-border);">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="event.preventDefault();">Create Gallery</button>
+      </div>
+    </div>
+  </div>
+</div>
