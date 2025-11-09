@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Post Feed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
+</head>
+
+<body>
+    <div class="navigation">
+        <a href="{{ url_for('home.home') }}">
+            <button class="action-button">Home</button>
+        </a>
+        <a href="{{ url_for('createpost.create_post') }}">
+            <button class="action-button">Create Post</button>
+        </a>
+    </div>
+
+    <div class="post-feed">
+        <h1>Post Feed</h1>
+
+        <div class="filter-section">
+            <h3>Filter by Tag</h3>
+            <select id="tagFilter" onchange="filterPosts()">
+                <option value="">All Tags</option>
+                {% for tag in all_tags %}
+                <option value="{{ tag }}">{{ tag }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {% for post in posts %}
+        <div class="post">
+            <div class="post-header">
+                <a href="{{ url_for('profile.profile', user=post.author) }}" title="View {{ post.author }}'s profile">
+                    <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar">
+                </a>
+                <div class="post-info">
+                    <div class="post-author">{{ post.author }}</div>
+                    <div class="post-date">{{ post.created_at }}</div>
+                </div>
+            </div>
+            <div class="post-content" style="color: {{ post.text_color }}; font-family: {{ post.text_font }};">
+                {{ post.text }}
+            </div>
+            {% if post.tags %}
+            <div class="post-tags">
+                {% for tag in post.tags %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <a href="{{ url_for('viewpost.view_post', post_id=loop.index0) }}">
+                <button class="action-button">View Post</button>
+            </a>
+        </div>
+        {% else %}
+        <p>No posts available.</p>
+        {% endfor %}
+    </div>
+
+    <script>
+        function filterPosts() {
+            // TODO: Implement filtering functionality
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Post</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Create a New Post</h2>
+        <form method="POST" action="{{ url_for('createpost.create_post') }}">
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="tags">Tags</label>
+                <input type="text" id="tags" name="tags" placeholder="Enter tags separated by commas">
+                <div class="help-text">Example: programming, python, web development</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="text_color">Text Color</label>
+                    <input type="color" id="text_color" name="text_color" value="#ffffff" required>
+                </div>
+                <div class="form-group">
+                    <label for="text_font">Text Font</label>
+                    <select id="text_font" name="text_font" required>
+                        <option value="Roboto">Roboto</option>
+                        <option value="Pacifico">Pacifico</option>
+                        <option value="Monoton">Monoton</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="submit-button">Create Post</button>
+        </form>
+    </div>
+</body>
+
+</html>
