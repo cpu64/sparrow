@@ -166,13 +166,12 @@
             {{ post.text }}
         </div>
 
-        <button class="action-button toggle-comments-btn" onclick="toggleComments()">
-            View Comments ({{ comments|length }})
-        </button>
+        <input type="checkbox" id="show-comments" class="css-toggle-switch" autocomplete="off">
+        <label for="show-comments" class="action-button toggle-comments-btn"> View Comments ({{ comments|length }}) </label>
 
-        <div class="comments-section" id="commentsSection">
+        <div class="css-toggle-content comments-section" id="commentsSection">
             <h2>Comments</h2>
-            
+
             <form method="POST" class="comment-form">
                 <textarea name="comment_text" placeholder="Write your comment..." required></textarea>
                 <button type="submit" class="action-button">Post Comment</button>
@@ -196,20 +195,5 @@
             {% endfor %}
         </div>
     </div>
-
-    <script>
-        function toggleComments() {
-            const commentsSection = document.getElementById('commentsSection');
-            const button = document.querySelector('.toggle-comments-btn');
-            
-            commentsSection.classList.toggle('active');
-            
-            if (commentsSection.classList.contains('active')) {
-                button.textContent = 'Hide Comments ({{ comments|length }})';
-            } else {
-                button.textContent = 'View Comments ({{ comments|length }})';
-            }
-        }
-    </script>
 </body>
 </html>
