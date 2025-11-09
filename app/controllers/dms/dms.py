@@ -43,46 +43,56 @@ def fetch_chat(chat_id):
 [
     [
         {
+            "user": 1,
             "sender": "A",
             "content": "labas"
         },
         {
+            "user": 2,
             "sender": "B",
-            "content": "ate"
+            "content": "ate fesgrdg poirkgjdj orjerjoghijerohj gerj perj gpjrpg per gperj pgkpkg poewk pgpwo jgpewj gpwe pojwpej gpewj gpwj pgojewp ogjwpo gjpwej gpwoej gp fesgrdg poirkgjdj orjerjoghijerohj gerj perj gpjrpg per gperj pgkpkg poewk pgpwo jgpewj gpwe pojwpej gpewj gpwj pgojewp ogjwpo gjpwej gpwoej gp"
         },
         {
+            "user": 1,
             "sender": "A",
             "content": "Nemandagu!"
         }
     ],
     [
         {
+            "user": 1,
             "sender": "A",
             "content": "labas"
         },
         {
+            "user": 1,
             "sender": "A",
             "content": "labas!!!"
         },
         {
+            "user": 2,
             "sender": "B",
             "content": "Nemandagu!"
         }
     ],
     [
         {
+            "user": 1,
             "sender": "A",
             "content": "ate"
         },
         {
+            "user": 2,
             "sender": "B",
             "content": "o kur labas?"
         },
         {
+            "user": 2,
             "sender": "B",
             "content": "sakiau ate"
         },
         {
+            "user": 1,
             "sender": "A",
             "content": "miau"
         }
