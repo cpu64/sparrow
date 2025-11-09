@@ -32,6 +32,12 @@ def login():
             flash(response, "error")
             return render_template('users/login.html')
 
+        if response['banned']:
+            if (err := mark_login(username, False)):
+                flash(err, "error")
+            flash('You have been banned.', "error")
+            return render_template('users/login.html')
+
         password_is_valid = bcrypt.checkpw(password.encode('utf-8'), response['password'].encode('utf-8'))
         response['last_login'] = response['last_login'] if response['last_login'] else datetime.utcfromtimestamp(0)
         new_totp = datetime.utcnow() - response['last_login'] > timedelta(seconds=period)
