@@ -149,3 +149,12 @@ def fetch_chat(chat_id):
     messages = json.loads(chat_dump)[int(chat_id) - 1]
 
     return render_template('dms/chat.html', chat_id=chat_id, messages=messages)
+
+@dms_blueprint.route('/new_chat', methods=['GET'])
+def new_chat():
+    role = session.get("role", "")
+    if role == "guest":
+        flash(f"You do not have permisions to access that page.", "error")
+        return redirect(url_for('home.home'))
+
+    return render_template('dms/new_chat.html')
