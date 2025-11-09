@@ -55,6 +55,7 @@
             display: flex;
             gap: 12px;
             align-items: flex-end;
+            position: relative;
         }
 
         .message.sent {
@@ -106,8 +107,13 @@
             align-items: center;
             flex-direction: column;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.1s;
         }
 
+        .message-bubble:hover {
+            transform: scale(1.02);
+        }
 
         .message.sent .message-bubble {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -189,6 +195,113 @@
         .messages-container::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
+        .edit-button {
+            position: absolute;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            display: none;
+            transition: all 0.2s;
+        }
+
+        .edit-button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .edit-button.show {
+            display: block;
+        }
+
+        .message.sent .edit-button {
+            top: -35px;
+            right: 50px;
+        }
+
+        .edit-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-modal.show {
+            display: flex;
+        }
+
+        .edit-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .edit-modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .edit-modal-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .edit-modal-footer {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            justify-content: flex-end;
+        }
+
+        .edit-modal-footer button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-save {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
     </style>
 </head>
 
@@ -200,7 +313,8 @@
 
         <div class="messages-container">
             {% for message in messages %}
-            <div class="message {% if message.sent_by_me %}sent{% else %}received{% endif %}">
+            <div class="message {% if message.sent_by_me %}sent{% else %}received{% endif %}"
+                data-message-id="{{ loop.index }}">
                 <div class="avatar">
                     {% if message.sender_avatar %}
                     <img src="{{ message.sender_avatar }}" alt="{{ message.sender }}">
@@ -210,8 +324,12 @@
                 </div>
                 <div>
                     <div class="sender-name">{{ message.sender }}</div>
-                    <div class="message-bubble">{{ message.content }}</div>
+                    <div class="message-bubble" data-original-content="{{ message.content }}">{{ message.content }}
+                    </div>
                 </div>
+                {% if message.sent_by_me %}
+                <button class="edit-button" onclick="openEditModal({{ loop.index }})">Edit</button>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -230,7 +348,98 @@
         </div>
     </div>
 
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">Edit Message</div>
+            <textarea class="edit-modal-textarea" id="editTextarea"></textarea>
+            <div class="edit-modal-footer">
+                <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="btn-save" onclick="saveEditedMessage()">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let currentEditingMessageId = null;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const messages = document.querySelectorAll('.message.sent');
+
+            messages.forEach(message => {
+                const bubble = message.querySelector('.message-bubble');
+                const editBtn = message.querySelector('.edit-button');
+
+                bubble.addEventListener('click', function (e) {
+                    e.stopPropagation();
+
+                    document.querySelectorAll('.edit-button').forEach(btn => {
+                        if (btn !== editBtn) {
+                            btn.classList.remove('show');
+                        }
+                    });
+
+                    editBtn.classList.toggle('show');
+                });
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.message-bubble') && !e.target.closest('.edit-button')) {
+                    document.querySelectorAll('.edit-button').forEach(btn => {
+                        btn.classList.remove('show');
+                    });
+                }
+            });
+        });
+
+        function openEditModal(messageId) {
+            const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+            const messageBubble = messageElement.querySelector('.message-bubble');
+            const currentContent = messageBubble.textContent;
+
+            currentEditingMessageId = messageId;
+            document.getElementById('editTextarea').value = currentContent;
+            document.getElementById('editModal').classList.add('show');
+            document.getElementById('editTextarea').focus();
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+            currentEditingMessageId = null;
+        }
+
+        function saveEditedMessage() {
+            const newContent = document.getElementById('editTextarea').value.trim();
+
+            if (newContent && currentEditingMessageId) {
+                const messageElement = document.querySelector(`[data-message-id="${currentEditingMessageId}"]`);
+                const messageBubble = messageElement.querySelector('.message-bubble');
+
+                messageBubble.textContent = newContent;
+
+                console.log('Message edited:', currentEditingMessageId, 'New content:', newContent);
+
+                // fetch(`/dms/edit_message/${currentEditingMessageId}`, {
+                //     method: 'POST',
+                //     body: JSON.stringify({ content: newContent }),
+                //     headers: { 'Content-Type': 'application/json' }
+                // })
+
+                closeEditModal();
+            }
+        }
+
+        document.getElementById('editModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && document.getElementById('editModal').classList.contains('show')) {
+                closeEditModal();
+            }
+        });
+
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
