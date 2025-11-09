@@ -9,6 +9,7 @@ from controllers.users.logout import logout_bp
 from controllers.users.avatars import avatars_bp
 from controllers.users.profile import profile_bp
 from controllers.users.register import register_bp
+from controllers.dms.dms import dms_blueprint
 from controllers.posts.posts import postfeed_bp, createpost_bp, viewpost_bp
 from controllers.dms.dms import dms_blueprint
 import secrets
