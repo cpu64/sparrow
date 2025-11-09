@@ -44,47 +44,103 @@ def fetch_chat(chat_id):
     [
         {
             "sender": "A",
-            "content": "labas"
+            "content": "labas",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
             "sender": "B",
-            "content": "ate"
+            "content": "ate",
+            "sent_by_me": false,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/800px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg"
         },
         {
             "sender": "A",
-            "content": "Nemandagu!"
+            "content": "Nemandagu!",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         }
     ],
     [
         {
             "sender": "A",
-            "content": "labas"
+            "content": "labas",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
             "sender": "A",
-            "content": "labas!!!"
+            "content": "labas!!!",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
             "sender": "B",
-            "content": "Nemandagu!"
+            "content": "Nemandagu!",
+            "sent_by_me": false,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/800px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg"
+        },
+        {
+            "sender": "A",
+            "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
+        },
+        {
+            "sender": "A",
+            "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
+        },
+        {
+            "sender": "A",
+            "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
+        },
+        {
+            "sender": "A",
+            "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
+        },
+        {
+            "sender": "A",
+            "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
+        },
+        {
+            "sender": "A",
+            "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         }
     ],
     [
         {
             "sender": "A",
-            "content": "ate"
+            "content": "ate",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
             "sender": "B",
-            "content": "o kur labas?"
-        },
-        {
-            "sender": "B",
-            "content": "sakiau ate"
+            "content": "o kur labas?",
+            "sent_by_me": false,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/800px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg"
         },
         {
             "sender": "A",
-            "content": "miau"
+            "content": "sakiau ate",
+            "sent_by_me": true,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
+        },
+        {
+            "sender": "B",
+            "content": "miau",
+            "sent_by_me": false,
+            "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/800px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg"
         }
     ]
 ]
