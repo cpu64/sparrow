@@ -10,6 +10,7 @@ from controllers.users.avatars import avatars_bp
 from controllers.users.profile import profile_bp
 from controllers.users.register import register_bp
 from controllers.dms.dms import dms_blueprint
+from controllers.posts.posts import postfeed_bp, createpost_bp, viewpost_bp
 import secrets
 import os
 
@@ -23,6 +24,10 @@ app.register_blueprint(avatars_bp, url_prefix='/users/')
 app.register_blueprint(profile_bp, url_prefix='/users/profile')
 app.register_blueprint(register_bp, url_prefix='/users')
 app.register_blueprint(dms_blueprint, url_prefix='/dms')
+
+app.register_blueprint(postfeed_bp, url_prefix='/posts')
+app.register_blueprint(createpost_bp, url_prefix='/posts')
+app.register_blueprint(viewpost_bp, url_prefix='/posts')
 
 @app.before_request
 def ensure_default_session():
