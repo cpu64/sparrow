@@ -8,7 +8,7 @@ __posts = [
         "text_font": "Roboto",
         "created_at": "2025-10-10 10:00",
         "views": 0,
-        "author": "user1",
+        "author": "admin",
         "tags": ["example", "demo"],
     },
     {
@@ -17,7 +17,7 @@ __posts = [
         "text_font": "Monoton",
         "created_at": "2025-10-11 11:00",
         "views": 0,
-        "author": "user2",
+        "author": "admin",
         "tags": ["test"],
     },
 ]

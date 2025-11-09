@@ -4,13 +4,13 @@ import datetime
 __comments = [
     {
         "text": "Great post!",
-        "author": "commenter1",
+        "author": "admin",
         "created_at": "2025-10-10 12:00",
         "post_id": 0,
     },
     {
         "text": "Thanks for sharing.",
-        "author": "commenter2",
+        "author": "admin",
         "created_at": "2025-10-11 13:00",
         "post_id": 0,
     },
