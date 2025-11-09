@@ -145,6 +145,14 @@
         .toggle-comments-btn {
             margin-top: 20px;
         }
+
+        #show-comments:checked + .toggle-comments-btn::after {
+            content: 'Hide Comments ({{ comments|length }})';
+        }
+
+        #show-comments:not(:checked) + .toggle-comments-btn::after {
+            content: 'View Comments ({{ comments|length }})';
+        }
     </style>
 </head>
 <body>
@@ -167,7 +175,7 @@
         </div>
 
         <input type="checkbox" id="show-comments" class="css-toggle-switch" autocomplete="off">
-        <label for="show-comments" class="action-button toggle-comments-btn"> View Comments ({{ comments|length }}) </label>
+        <label for="show-comments" class="action-button toggle-comments-btn"></label>
 
         <div class="css-toggle-content comments-section" id="commentsSection">
             <h2>Comments</h2>
