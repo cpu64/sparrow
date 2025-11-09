@@ -9,6 +9,9 @@ from controllers.users.logout import logout_bp
 from controllers.users.avatars import avatars_bp
 from controllers.users.profile import profile_bp
 from controllers.users.register import register_bp
+from controllers.gallery.gallery import gallery_bp
+from controllers.gallery.image import image_bp
+from controllers.gallery.image_comment import image_comments_bp
 from controllers.dms.dms import dms_blueprint
 from controllers.posts.posts import postfeed_bp, createpost_bp, viewpost_bp
 from controllers.dms.dms import dms_blueprint
@@ -19,6 +22,7 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
 app.register_blueprint(home_bp, url_prefix='/home')
+
 app.register_blueprint(login_bp, url_prefix='/users')
 app.register_blueprint(logout_bp, url_prefix='/users')
 app.register_blueprint(avatars_bp, url_prefix='/users/')
@@ -29,6 +33,10 @@ app.register_blueprint(dms_blueprint, url_prefix='/dms')
 app.register_blueprint(postfeed_bp, url_prefix='/posts')
 app.register_blueprint(createpost_bp, url_prefix='/posts')
 app.register_blueprint(viewpost_bp, url_prefix='/posts')
+
+app.register_blueprint(gallery_bp, url_prefix='/gallery')
+app.register_blueprint(image_bp, url_prefix='/gallery/<gallery_id>/images')
+app.register_blueprint(image_comments_bp, url_prefix='/gallery/<gallery_id>/images/<image_id>/comments')
 
 @app.before_request
 def ensure_default_session():
