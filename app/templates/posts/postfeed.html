@@ -34,14 +34,13 @@
         {% for post in posts %}
         <div class="post">
             <div class="post-header">
-                <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar"
-                    onerror="this.src='{{ url_for('static', filename='avatars/default.png') }}'">
+                <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar">
                 <div class="post-info">
                     <div class="post-author">{{ post.author }}</div>
                     <div class="post-date">{{ post.created_at }}</div>
                 </div>
             </div>
-            <div class="post-content" data-color="{{ post.text_color }}" data-font="{{ post.text_font }}">
+            <div class="post-content" style="color: {{ post.text_color }}; font-family: {{ post.text_font }};">
                 {{ post.text }}
             </div>
             {% if post.tags %}
@@ -64,13 +63,6 @@
         function filterPosts() {
             // TODO: Implement filtering functionality
         }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            document.querySelectorAll('.post-content').forEach(el => {
-                el.style.color = el.dataset.color;
-                el.style.fontFamily = el.dataset.font;
-            });
-        });
     </script>
 </body>
 

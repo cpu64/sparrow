@@ -15,15 +15,14 @@
         </a>
 
         <div class="post-header">
-            <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar"
-                onerror="this.src='{{ url_for('static', filename='avatars/default.png') }}'">
+            <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar">
             <div>
                 <div class="post-author">{{ post.author }}</div>
                 <div class="post-date">{{ post.created_at }}</div>
             </div>
         </div>
 
-        <div class="post-content" data-color="{{ post.text_color }}" data-font="{{ post.text_font }}">
+        <div class="post-content" style="color: {{ post.text_color }}; font-family: {{ post.text_font }};">
             {{ post.text }}
         </div>
 
@@ -58,8 +57,7 @@
                     Delete
                 </button>
                 <div class="comment-header">
-                    <img src="https://avatar.iran.liara.run/public/6" alt="{{ comment.author }}'s avatar"
-                        onerror="this.src='{{ url_for('static', filename='avatars/default.png') }}'">
+                    <img src="https://avatar.iran.liara.run/public/6" alt="{{ comment.author }}'s avatar">
                     <div>
                         <div class="comment-author">{{ comment.author }}</div>
                         <div class="comment-date">{{ comment.created_at }}</div>
@@ -74,12 +72,6 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const post = document.querySelector(".post-content");
-            post.style.color = post.dataset.color;
-            post.style.fontFamily = post.dataset.font;
-        });
-
         function toggleComments() {
             const commentsSection = document.getElementById('commentsSection');
             const btn = document.querySelector('.toggle-comments-btn');
