@@ -43,19 +43,19 @@ def fetch_chat(chat_id):
 [
     [
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "labas",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "B",
+            "sender": "aaa",
             "content": "ate",
             "sent_by_me": false,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/800px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg"
         },
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "Nemandagu!",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
@@ -63,55 +63,55 @@ def fetch_chat(chat_id):
     ],
     [
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "labas",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "labas!!!",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "B",
+            "sender": "aaa",
             "content": "Nemandagu!",
             "sent_by_me": false,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/800px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg"
         },
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "Daug teksto: Nesu tikras ka cia rasyti ir kodel nenoriu naudoti to lorem ipsum ar kokio ten bieso tai stai istorija apie katina. Katinas buvo mielas. Katinas suvalge suni. Katinas kietas. Katinas mire. Pabaiga.",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
@@ -119,25 +119,25 @@ def fetch_chat(chat_id):
     ],
     [
         {
-            "sender": "A",
+            "sender": "admin",
             "content": "ate",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "B",
+            "sender": "aaa",
             "content": "o kur labas?",
             "sent_by_me": false,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/800px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg"
         },
         {
-            "sender": "A",
+            "sender": "aaa",
             "content": "sakiau ate",
             "sent_by_me": true,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1920px-Cat_August_2010-4.jpg"
         },
         {
-            "sender": "B",
+            "sender": "aaa",
             "content": "miau",
             "sent_by_me": false,
             "sender_avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg/800px-Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg"

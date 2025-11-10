@@ -316,11 +316,13 @@
             <div class="message {% if message.sent_by_me %}sent{% else %}received{% endif %}"
                 data-message-id="{{ loop.index }}">
                 <div class="avatar">
+                <a href="{{ url_for('profile.profile', user=message.sender) }}" title="View {{ message.sender }}'s profile">
                     {% if message.sender_avatar %}
-                    <img src="{{ message.sender_avatar }}" alt="{{ message.sender }}">
+                        <img src="{{ message.sender_avatar }}" alt="{{ message.sender }}'s Avatar">
                     {% else %}
-                    {{ message.sender[0].upper() }}
+                        <img src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}" alt="Default Avatar">
                     {% endif %}
+                </a>
                 </div>
                 <div>
                     <div class="sender-name">{{ message.sender }}</div>
