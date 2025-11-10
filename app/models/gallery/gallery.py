@@ -1,5 +1,7 @@
 __galleries = [
     {
+        "owner": "aaa",
+        "owner_avatar": "",
         "name": "Example gallery 1",
         "description": "This is my gallery",
         "created_at": "2025-11-01",
@@ -7,6 +9,8 @@ __galleries = [
         "background_color": "#00aa55"
     },
     {
+        "owner": "aaa",
+        "owner_avatar": "",
         "name": "Example gallery 2",
         "description": "This is my other gallery",
         "created_at": "2025-11-01",

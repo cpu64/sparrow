@@ -37,6 +37,13 @@
             <div class="col">
                 <div class="card h-100 shadow">
                     <div class="card-body d-flex flex-column">
+                        <a href="{{ url_for('profile.profile', user=gallery.owner) }}" title="View {{ gallery.owner }}'s profile">
+                            {% if gallery.owner_avatar %}
+                                <img src="{{ gallery.owner_avatar }}" alt="{{ gallery.owner }}'s Avatar">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}" alt="Default Avatar">
+                            {% endif %}
+                        </a>
                         <h5 class="card-title fw-semibold">{{ gallery.name }}</h5>
                         <p class="card-text flex-grow-1">{{ gallery.description }}</p>
                         <small class="card-text mt-2">{{ gallery.created_at }}</small>
