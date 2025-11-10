@@ -58,12 +58,7 @@
         <div class="p-4 rounded shadow-lg bg-dark bg-opacity-50 border border-secondary">
             <h4 class="text-white fw-semibold mb-4 pb-3 border-bottom border-primary border-2">Comments ({{ comments|length }})</h4>
 
-            {% for comment in comments %}
-            <div class="comment p-3 mb-3 rounded bg-dark bg-opacity-25 border border-secondary">
-                <p class="text-light mb-2">{{ comment.name }}</p>
-                <small class="text-primary">{{ comment.created_at }}</small>
-            </div>
-            {% endfor %}
+            {% include 'includes/comments.html' %}
 
             {% if not comments %}
             <p class="text-muted text-center py-5">No comments yet. Be the first to comment!</p>
