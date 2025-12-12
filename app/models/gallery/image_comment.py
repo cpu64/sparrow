@@ -1,15 +1,22 @@
-__image_comments = [
-    {
-        "text": "Amazing!",
-        "author": "admin",
-        "created_at": "2025-11-01",
-    },
-    {
-        "text": "RAID: Shadow Legends™ is an immersive online experience with everything you'd expect from a brand new RPG title. It's got an amazing storyline, awesome 3D graphics, giant boss fights, PVP battles, and hundreds of never before seen champions to collect and customize.",
-        "author": "aaa",
-        "created_at": "2025-11-01",
-    },
-]
+from models.db import execute, get_all
+from datetime import datetime
 
-def get_image_comments():
-    return __image_comments
+COMMENT_COLUMN_LENGTHS = {
+    "text": [1, 255]
+}
+
+def get_comments_by_image(image_id):
+    return get_all("""
+        SELECT c.id, c.text, c.created_at, u.username as author, a.url as author_avatar
+        FROM image_comments c
+        JOIN users u ON c.user_id = u.id
+        LEFT JOIN avatars a ON u.avatar_id = a.id
+        WHERE c.image_id = %s
+        ORDER BY c.created_at DESC
+    """, (image_id,))
+
+def create_comment(text, user_id, image_id):
+    execute("""
+        INSERT INTO image_comments (text, user_id, image_id, created_at)
+        VALUES (%s, %s, %s, %s)
+    """, (text, user_id, image_id, datetime.utcnow()))
