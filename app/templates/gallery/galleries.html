@@ -20,18 +20,27 @@
     <div class="container py-5">
         {% include 'includes/flash_messages.html' %}
 
-        <div class="d-flex justify-content-between align-items-center mb-5 p-4 rounded bg-dark bg-opacity-25 border border-secondary">
+        <div class="d-flex justify-content-between align-items-center mb-4 p-4 rounded bg-dark bg-opacity-25 border border-secondary">
             <div>
-                <h1 class="text-white mb-1">My Galleries</h1>
-                <p class="text-white-50 mb-0 small">Browse your collections</p>
+                <h1 class="text-white mb-1">{{ 'My Galleries' if current_view == 'my' else 'All Galleries' }}</h1>
+                <p class="text-white-50 mb-0 small">{{ 'Browse your collections' if current_view == 'my' else 'Browse all collections' }}</p>
             </div>
             <div class="d-flex gap-2">
+                {% if session.role != 'guest' %}
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addGalleryModal">
                     + Add Gallery
                 </button>
+                {% endif %}
                 <a href="/" class="btn btn-primary">Home</a>
             </div>
         </div>
+
+        {% if session.role != 'guest' %}
+        <div class="btn-group mb-4 w-100" role="group">
+            <a href="{{ url_for('gallery.list_galleries', view='my') }}" class="btn btn-lg {{ 'btn-primary' if current_view == 'my' else 'btn-outline-primary' }}">My Galleries</a>
+            <a href="{{ url_for('gallery.list_galleries', view='all') }}" class="btn btn-lg {{ 'btn-primary' if current_view == 'all' else 'btn-outline-primary' }}">All Galleries</a>
+        </div>
+        {% endif %}
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for gallery in galleries %}

@@ -7,16 +7,19 @@ gallery_bp = Blueprint('gallery', __name__)
 
 @gallery_bp.route('', methods=['GET'])
 def list_galleries():
-    user_id_filter = request.args.get('user_id')
-    if user_id_filter:
-        user_data = get_data(user_id_filter, ['id'])
+    view = request.args.get('view', 'my' if session.get('role') != 'guest' else 'all')
+
+    if view == 'my' and session.get('role') != 'guest':
+        user_data = get_data(session['username'], ['id'])
         if isinstance(user_data, str):
             flash(user_data, "error")
-            return redirect(url_for('gallery.list_galleries'))
+            return redirect(url_for('gallery.list_galleries', view='all'))
         galleries = gallery_model.get_all_galleries(user_data['id'])
     else:
         galleries = gallery_model.get_all_galleries()
-    return render_template('gallery/galleries.html', galleries=galleries)
+        view = 'all'
+
+    return render_template('gallery/galleries.html', galleries=galleries, current_view=view)
 
 @gallery_bp.route('/<int:gallery_id>', methods=['GET'])
 def retrieve_gallery(gallery_id):
