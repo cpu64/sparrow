@@ -121,7 +121,7 @@ def init_db():
             surname VARCHAR(%(surname_length)s),
             email VARCHAR(%(email_length)s),
             description VARCHAR(%(description_length)s),
-            date_of_birth TIMESTAMP,
+            date_of_birth DATE,
             phone_number VARCHAR(%(phone_number_length)s),
             pronouns VARCHAR(%(pronouns_length)s),
             sex BOOLEAN,
@@ -131,8 +131,8 @@ def init_db():
             updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
             last_login TIMESTAMP,
             last_login_attempt TIMESTAMP,
-            banned BOOLEAN DEFAULT FALSE,
-            admin BOOLEAN DEFAULT FALSE,
+            banned BOOLEAN NOT NULL DEFAULT FALSE,
+            admin BOOLEAN NOT NULL DEFAULT FALSE,
             avatar_id INT REFERENCES avatars(id)
         );
         """, {

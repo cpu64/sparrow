@@ -1,0 +1,29 @@
+<div class="comments-section" id="commentsSection">
+    <h2>Comments</h2>
+    <form method="POST" class="comment-form">
+        <textarea name="comment_text" placeholder="Write your comment..." required></textarea>
+        <button type="submit" class="action-button">Post Comment</button>
+    </form>
+
+    {% for comment in comments %}
+    <div class="comment">
+        <button class="action-button delete-button comment-delete-btn"
+            onclick="deleteComment('{{ comment.id }}')">
+            Delete
+        </button>
+        <div class="comment-header">
+            <a href="{{ url_for('profile.profile', user=comment.author) }}" title="View {{ comment.author }}'s profile">
+                <img src="https://avatar.iran.liara.run/public/6" alt="{{ comment.author }}'s avatar">
+            </a>
+            <div>
+                <div class="comment-author">{{ comment.author }}</div>
+                <div class="comment-date">{{ comment.created_at }}</div>
+            </div>
+        </div>
+        <div class="comment-text">{{ comment.text }}</div>
+    </div>
+    {% else %}
+    <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+</div>
+</div>
