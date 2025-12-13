@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 from models.users.avatar import get_avatar
 from models.dms.chat import create_new_chat, get_chat_name, list_chats_for_user, get_messages_for_chat
 from models.users.user import get_data, get_username
@@ -17,13 +17,7 @@ def dms():
 
     return render_template('dms/dm_list.html', chats=chats)
 
-@dms_blueprint.route('/chat/<chat_id>', methods=['GET'])
-def fetch_chat(chat_id):
-    role = session.get("role", "")
-    if role == "guest":
-        flash(f"You do not have permisions to access that page.", "error")
-        return redirect(url_for('home.home'))
-
+def get_messages(chat_id):
     user_id = session.get("user_id")
     messages = get_messages_for_chat(chat_id)
     messages = [{
@@ -33,8 +27,29 @@ def fetch_chat(chat_id):
         'sent_by_me': m.sender_id == user_id,
         'id': m.id
                  } for m in messages]
+    return messages
 
-    return render_template('dms/chat.html', chat_name=get_chat_name(chat_id), messages=messages)
+@dms_blueprint.route('/chat/<chat_id>', methods=['GET'])
+def fetch_chat(chat_id):
+    role = session.get("role", "")
+    if role == "guest":
+        flash(f"You do not have permisions to access that page.", "error")
+        return redirect(url_for('home.home'))
+
+    messages = get_messages(chat_id)
+
+    return render_template('dms/chat.html', chat_name=get_chat_name(chat_id), chat_id=chat_id, messages=messages)
+
+@dms_blueprint.route("/fetch_chat/<chat_id>", methods=['GET'])
+def fetch_chat_messages(chat_id):
+    role = session.get("role", "")
+    if role == "guest":
+        flash(f"You do not have permisions to access that page.", "error")
+        return redirect(url_for('home.home'))
+
+    messages = get_messages(chat_id)
+
+    return jsonify(messages)
 
 @dms_blueprint.route('/new_chat', methods=['GET'])
 def new_chat():
