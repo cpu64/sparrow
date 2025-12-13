@@ -308,21 +308,23 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <h1>Chat {{ chat_id }}</h1>
+            <h1>Chat - {{ chat_name }}</h1>
         </div>
 
         <div class="messages-container">
             {% for message in messages %}
             <div class="message {% if message.sent_by_me %}sent{% else %}received{% endif %}"
-                data-message-id="{{ loop.index }}">
+                data-message-id="{{ message.id }}">
                 <div class="avatar">
-                <a href="{{ url_for('profile.profile', user=message.sender) }}" title="View {{ message.sender }}'s profile">
-                    {% if message.sender_avatar %}
+                    <a href="{{ url_for('profile.profile', user=message.sender) }}"
+                        title="View {{ message.sender }}'s profile">
+                        {% if message.sender_avatar %}
                         <img src="{{ message.sender_avatar }}" alt="{{ message.sender }}'s Avatar">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}" alt="Default Avatar">
-                    {% endif %}
-                </a>
+                        {% else %}
+                        <img src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}"
+                            alt="Default Avatar">
+                        {% endif %}
+                    </a>
                 </div>
                 <div>
                     <div class="sender-name">{{ message.sender }}</div>
@@ -330,7 +332,7 @@
                     </div>
                 </div>
                 {% if message.sent_by_me %}
-                <button class="edit-button" onclick="openEditModal({{ loop.index }})">Edit</button>
+                <button class="edit-button" onclick="openEditModal({{ message.id }})">Edit</button>
                 {% endif %}
             </div>
             {% endfor %}

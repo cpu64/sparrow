@@ -1,7 +1,7 @@
 # controllers/users/login.py
 import bcrypt
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from models.users.user import check_length, get_credentials, mark_login
+from models.users.user import check_length, get_credentials, mark_login, get_data
 from totp import verify, period
 from datetime import datetime, timedelta
 
@@ -49,6 +49,7 @@ def login():
                 return render_template('users/login.html')
             session['username'] = username
             session['role'] = 'admin' if response['admin'] else 'user'
+            session['user_id'] = get_data(username, ('id',))['id']
             return redirect(url_for('home.home'))
         if new_totp:
             flash("Invalid credentials, please try again.", "error")

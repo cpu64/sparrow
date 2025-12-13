@@ -70,7 +70,7 @@ def get_chats_with_unseen_messages(user_id):
         (user_id, user_id)
     )
 
-def mark_chat_messages_as_seen(chat_id: int, user_id: int) -> int:
+def mark_chat_messages_as_seen(chat_id, user_id):
     result = get_one(
         """
         UPDATE messages
@@ -88,7 +88,7 @@ def mark_chat_messages_as_seen(chat_id: int, user_id: int) -> int:
 
     return result["updated"] if result else 0
 
-def get_messages_for_chat(chat_id: int) -> list[dict]:
+def get_messages_for_chat(chat_id):
     return get_all(
         """
         SELECT
@@ -105,3 +105,30 @@ def get_messages_for_chat(chat_id: int) -> list[dict]:
         """,
         (chat_id,)
     )
+
+def list_chats_for_user(user_id):
+    return get_all(
+        """
+        SELECT
+            c.id AS chat_id,
+            c.name
+        FROM chats c
+        JOIN chat_members cm
+            ON cm.chat_id = c.id
+        WHERE cm.member_id = %s
+        ORDER BY c.updated_at DESC;
+        """,
+        (user_id,)
+    )
+
+def get_chat_name(chat_id):
+    chat = get_one(
+        """
+        SELECT name
+        FROM chats
+        WHERE id = %s;
+        """,
+        (chat_id,)
+    )
+
+    return chat["name"] if chat else ""
