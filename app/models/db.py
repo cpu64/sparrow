@@ -43,6 +43,7 @@ def get_one(query, values=()):
         cur = conn.cursor()
         cur.execute(query, values)
         data = cur.fetchone()
+        conn.commit()
 
         if data:
             columns = [desc[0] for desc in cur.description]
@@ -68,6 +69,7 @@ def get_all(query, values=()):
         cur = conn.cursor()
         cur.execute(query, values)
         data = cur.fetchall()
+        conn.commit()
 
         if data:
             columns = [desc[0] for desc in cur.description]

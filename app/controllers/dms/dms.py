@@ -1,7 +1,7 @@
-from flask import Blueprint, flash, redirect, render_template, session, url_for
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 from models.users.avatar import get_avatar
-from models.dms.chat import get_chat_name, list_chats_for_user, get_messages_for_chat
-from models.users.user import get_username
+from models.dms.chat import create_new_chat, get_chat_name, list_chats_for_user, get_messages_for_chat
+from models.users.user import get_data, get_username
 
 dms_blueprint = Blueprint('dms', __name__)
 
@@ -44,3 +44,33 @@ def new_chat():
         return redirect(url_for('home.home'))
 
     return render_template('dms/new_chat.html')
+
+@dms_blueprint.route('/create_chat', methods=['POST'])
+def create_chat():
+    role = session.get("role", "")
+    if role == "guest":
+        flash(f"You do not have permisions to access that page.", "error")
+        return redirect(url_for('home.home'))
+
+    username = request.form.get('username')
+    chat_name = request.form.get('chat_name')
+
+    if username == None or chat_name == None or username == "" or chat_name == "":
+        flash(f"Form is missing required fields. Please fill in a valid chat name and username.", "error")
+        return redirect(url_for('dms.new_chat'))
+
+    other_user_query = get_data(username, ('id',))
+    if other_user_query in ["No such user.", "Error occurred while fetching user data."]:
+        flash(f"Invalid username. {other_user_query}", "error")
+        return redirect(url_for('dms.new_chat'))
+
+    other_id = other_user_query['id']
+    current_id = session.get("user_id")
+
+    if current_id == other_id:
+        flash(f"Cannot invite yourself into a chat.", "error")
+        return redirect(url_for('dms.new_chat'))
+
+    create_new_chat(chat_name, other_id, current_id)
+
+    return redirect(url_for('dms.dms'))

@@ -1,26 +1,22 @@
 from models.db import execute, get_one, get_all
 
-def create_chat(name, user_a_id, user_b_id):
-    chat = get_one(
-        """
-        INSERT INTO chats (name)
-        VALUES (%s)
-        RETURNING id;
-        """,
-        (name,)
-    )
+def create_new_chat(name, user_a_id, user_b_id):
+    row = get_one("""
+        WITH new_chat AS (
+            INSERT INTO chats (name)
+            VALUES (%s)
+            RETURNING id
+        ),
+        members AS (
+            INSERT INTO chat_members (member_id, chat_id)
+            SELECT %s, id FROM new_chat
+            UNION ALL
+            SELECT %s, id FROM new_chat
+        )
+        SELECT id FROM new_chat;
+    """, (name, user_a_id, user_b_id))
 
-    chat_id = chat["id"]
-
-    execute(
-        """
-        INSERT INTO chat_members (member_id, chat_id)
-        VALUES (%s, %s), (%s, %s);
-        """,
-        (user_a_id, chat_id, user_b_id, chat_id)
-    )
-
-    return chat_id
+    return row["id"]
 
 def leave_chat(chat_id, user_id):
     execute(
