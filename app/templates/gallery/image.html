@@ -9,7 +9,8 @@
         body { background: linear-gradient(135deg, var(--primary-color) 0%, #0f0a3a 100%); min-height: 100vh; }
         .info-label { color: #a8a8ff; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
         .comment { border-left: 4px solid var(--accent-color); }
-        textarea::placeholder { color: #888; }
+        textarea::placeholder { color: #aaa; }
+        .no-comments { color: #bbb; }
     </style>
 </head>
 <body>
@@ -95,7 +96,7 @@
                 <p class="text-light mb-0">{{ comment.text }}</p>
             </div>
             {% else %}
-            <p class="text-muted text-center py-5">No comments yet. Be the first to comment!</p>
+            <p class="no-comments text-center py-5">No comments yet. Be the first to comment!</p>
             {% endfor %}
         </div>
     </div>

@@ -54,12 +54,12 @@ def create_gallery():
         return redirect(url_for('gallery.list_galleries'))
 
     try:
-        gallery_model.create_gallery(name, description, background_color, user_data['id'])
+        gallery_id = gallery_model.create_gallery(name, description, background_color, user_data['id'])
         flash("Gallery created successfully", "success")
+        return redirect(url_for('gallery.retrieve_gallery', gallery_id=gallery_id))
     except Exception as e:
         flash(f"Error creating gallery: {str(e)}", "error")
-
-    return redirect(url_for('gallery.list_galleries'))
+        return redirect(url_for('gallery.list_galleries'))
 
 @gallery_bp.route('/<int:gallery_id>/delete', methods=['POST'])
 def delete_gallery(gallery_id):

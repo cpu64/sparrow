@@ -30,9 +30,10 @@ def get_gallery_by_id(gallery_id):
     """, (gallery_id,))
 
 def create_gallery(name, description, background_color, user_id):
-    execute("""
+    return execute("""
         INSERT INTO galleries (name, description, background_color, user_id, created_at, updated_at)
         VALUES (%s, %s, %s, %s, %s, %s)
+        RETURNING id
     """, (name, description, background_color, user_id, datetime.utcnow(), datetime.utcnow()))
 
 def delete_gallery(gallery_id):

@@ -22,7 +22,9 @@ def execute(query, values=()):
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute(query, values)
+        result = cur.fetchone() if cur.description else None
         conn.commit()
+        return result[0] if result else None
 
     except Exception as e:
         if conn:
