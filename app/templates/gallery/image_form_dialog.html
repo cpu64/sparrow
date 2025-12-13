@@ -6,15 +6,15 @@
         <h5 class="modal-title text-white" id="addImageModalLabel">Add New Image</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{{ url_for('image.create_image', gallery_id=gallery.id) }}" method="POST">
+      <form action="{{ url_for('image.create_image', gallery_id=gallery.id) }}" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
           <div class="mb-3">
             <label for="imageName" class="form-label text-white">Image Name</label>
             <input type="text" class="form-control" id="imageName" name="name" required>
           </div>
           <div class="mb-3">
-            <label for="imageUrl" class="form-label text-white">Image URL</label>
-            <input type="url" class="form-control" id="imageUrl" name="url" placeholder="https://example.com/image.jpg" required>
+            <label for="imageFile" class="form-label text-white">Image File</label>
+            <input type="file" class="form-control" id="imageFile" name="file" accept="image/*" required>
           </div>
           <div class="mb-3">
             <label for="imageDescription" class="form-label text-white">Description</label>
