@@ -1,0 +1,107 @@
+from models.db import execute, get_one, get_all
+
+def create_chat(name, user_a_id, user_b_id):
+    chat = get_one(
+        """
+        INSERT INTO chats (name)
+        VALUES (%s)
+        RETURNING id;
+        """,
+        (name,)
+    )
+
+    chat_id = chat["id"]
+
+    execute(
+        """
+        INSERT INTO chat_members (member_id, chat_id)
+        VALUES (%s, %s), (%s, %s);
+        """,
+        (user_a_id, chat_id, user_b_id, chat_id)
+    )
+
+    return chat_id
+
+def leave_chat(chat_id, user_id):
+    execute(
+        """
+        DELETE FROM chat_members
+        WHERE chat_id = %s AND member_id = %s;
+        """,
+        (chat_id, user_id)
+    )
+
+    remaining = get_one(
+        """
+        SELECT COUNT(*) AS count
+        FROM chat_members
+        WHERE chat_id = %s;
+        """,
+        (chat_id,)
+    )["count"]
+
+    if remaining == 0:
+        execute(
+            """
+            DELETE FROM chats
+            WHERE id = %s;
+            """,
+            (chat_id,)
+        )
+
+def get_chats_with_unseen_messages(user_id):
+    return get_all(
+        """
+        SELECT
+            c.id AS chat_id,
+            c.name,
+            c.updated_at,
+            COUNT(m.id) AS unseen_count
+        FROM chats c
+        JOIN chat_members cm ON cm.chat_id = c.id
+        JOIN messages m ON m.chat_id = c.id
+        WHERE
+            cm.member_id = %s
+            AND m.seen = FALSE
+            AND m.sender_id != %s
+        GROUP BY c.id
+        ORDER BY c.updated_at DESC;
+        """,
+        (user_id, user_id)
+    )
+
+def mark_chat_messages_as_seen(chat_id: int, user_id: int) -> int:
+    result = get_one(
+        """
+        UPDATE messages
+        SET
+            seen = TRUE,
+            updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
+        WHERE
+            chat_id = %s
+            AND sender_id != %s
+            AND seen = FALSE
+        RETURNING COUNT(*) AS updated;
+        """,
+        (chat_id, user_id)
+    )
+
+    return result["updated"] if result else 0
+
+def get_messages_for_chat(chat_id: int) -> list[dict]:
+    return get_all(
+        """
+        SELECT
+            id,
+            text,
+            seen,
+            created_at,
+            updated_at,
+            sender_id,
+            chat_id
+        FROM messages
+        WHERE chat_id = %s
+        ORDER BY created_at ASC;
+        """,
+        (chat_id,)
+    )
