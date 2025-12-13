@@ -64,7 +64,6 @@ def index():
 
 
 def check_secrets():
-    print(os.environ)
     if os.getenv('GOOGLE_APPLICATION_CREDENTIALS') is None:
         raise EnvironmentError("GOOGLE_APPLICATION_CREDENTIALS is not set")
     else:
