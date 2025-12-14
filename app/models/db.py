@@ -45,6 +45,7 @@ def get_one(query, values=()):
         cur = conn.cursor()
         cur.execute(query, values)
         data = cur.fetchone()
+        conn.commit()
 
         if data:
             columns = [desc[0] for desc in cur.description]
@@ -70,6 +71,7 @@ def get_all(query, values=()):
         cur = conn.cursor()
         cur.execute(query, values)
         data = cur.fetchall()
+        conn.commit()
 
         if data:
             columns = [desc[0] for desc in cur.description]
@@ -154,6 +156,37 @@ def init_db():
             'country_length': USER_COLUMN_LENGTHS['country'][1]
         })
 
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS chats (
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            name VARCHAR(60) NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+        );
+        """)
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            text VARCHAR(255) NOT NULL,
+            seen BOOLEAN NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            sender_id INT NOT NULL,
+            chat_id INT NOT NULL,
+            CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) references users(id) ON DELETE CASCADE,
+            CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) references chats(id) ON DELETE CASCADE
+        );
+        """)
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS chat_members (
+            member_id INT NOT NULL,
+            chat_id INT NOT NULL,
+            CONSTRAINT fk_member_id FOREIGN KEY (member_id) references users(id),
+            CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) references chats(id)
+        );
+        """)
         cur.execute("""
         CREATE TABLE IF NOT EXISTS galleries (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

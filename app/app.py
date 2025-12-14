@@ -2,6 +2,7 @@
 from pathlib import Path
 from flask import Flask, redirect, url_for, session, flash
 from datetime import datetime, timezone, timedelta
+from controllers.dms.mail_reports import start_email_loop
 from models.db import init_db
 from models.users.user import get_data
 from controllers.home import home_bp
@@ -76,5 +77,6 @@ def check_secrets():
 if __name__ == '__main__':
     check_secrets()
     init_db()
+    start_email_loop(app)
     app.run(debug=True, host=os.getenv('FALSK_HOST', '0.0.0.0'), port=os.getenv('FALSK_PORT', '5000'))
 

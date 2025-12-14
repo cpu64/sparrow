@@ -51,7 +51,7 @@ INSERT INTO users (
         NULL,
         'Avery',
         'Stone',
-        'avery.stone@example.com',
+        'luna.admin@example.com',
         'System administrator and founder of the Sparrow platform.',
         '1990-05-14',
         '+12025550111',
