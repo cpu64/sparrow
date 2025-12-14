@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
+from models.dms.message import create_message, update_message_contents
 from models.users.avatar import get_avatar
-from models.dms.chat import create_new_chat, get_chat_name, list_chats_for_user, get_messages_for_chat
+from models.dms.chat import create_new_chat, get_chat_name, list_chats_for_user, get_messages_for_chat, mark_chat_messages_as_seen
 from models.users.user import get_data, get_username
 
 dms_blueprint = Blueprint('dms', __name__)
@@ -19,13 +20,16 @@ def dms():
 
 def get_messages(chat_id):
     user_id = session.get("user_id")
+
+    mark_chat_messages_as_seen(chat_id, user_id)
+
     messages = get_messages_for_chat(chat_id)
     messages = [{
-        'sender': get_username(m.sender_id),
-        'sender_avatar': get_avatar(get_username(m.sender_id))['url'],
-        'content': m.text,
-        'sent_by_me': m.sender_id == user_id,
-        'id': m.id
+        'sender': get_username(m['sender_id']),
+        'sender_avatar': get_avatar(get_username(m['sender_id']))['url'],
+        'content': m['text'],
+        'sent_by_me': m['sender_id'] == user_id,
+        'id': m['id']
                  } for m in messages]
     return messages
 
@@ -89,3 +93,42 @@ def create_chat():
     create_new_chat(chat_name, other_id, current_id)
 
     return redirect(url_for('dms.dms'))
+
+@dms_blueprint.route('/edit_message/<message_id>', methods=['POST'])
+def edit_message(message_id):
+    role = session.get("role", "")
+    if role == "guest":
+        flash(f"You do not have permisions to access that page.", "error")
+        return redirect(url_for('home.home'))
+
+    data = request.get_json(silent=True)
+    if not data or "content" not in data:
+        return jsonify({"error": "Missing content"}), 400
+
+    new_text = data["content"].strip()
+    if not new_text:
+        return jsonify({"error": "Message cannot be empty"}), 400
+
+    update_message_contents(message_id, new_text)
+
+    return jsonify({"status": "ok"})
+
+@dms_blueprint.route('/send_message/<chat_id>', methods=['POST'])
+def send_message(chat_id):
+    role = session.get("role", "")
+    if role == "guest":
+        flash(f"You do not have permisions to access that page.", "error")
+        return redirect(url_for('home.home'))
+
+    data = request.get_json(silent=True)
+    if not data or "content" not in data:
+        return jsonify({"error": "Missing content"}), 400
+
+    new_text = data["content"].strip()
+    if not new_text:
+        return jsonify({"error": "Message cannot be empty"}), 400
+
+    user_id = session.get("user_id")
+    create_message(chat_id, user_id, new_text)
+
+    return jsonify({"status": "ok"})

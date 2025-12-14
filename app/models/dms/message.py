@@ -25,7 +25,7 @@ def create_message(
 
     return msg["id"]
 
-def edit_message(
+def update_message_contents(
     message_id,
     text = None,
     seen = None

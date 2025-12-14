@@ -366,33 +366,23 @@
     <script>
         let currentEditingMessageId = null;
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const messages = document.querySelectorAll('.message.sent');
+        document.addEventListener('click', function (e) {
+            const bubble = e.target.closest('.message-bubble');
+            if (!bubble) return;
 
-            messages.forEach(message => {
-                const bubble = message.querySelector('.message-bubble');
-                const editBtn = message.querySelector('.edit-button');
+            const messageEl = bubble.closest('.message.sent');
+            if (!messageEl) return;
 
-                bubble.addEventListener('click', function (e) {
-                    e.stopPropagation();
+            const editBtn = messageEl.querySelector('.edit-button');
+            if (!editBtn) return;
 
-                    document.querySelectorAll('.edit-button').forEach(btn => {
-                        if (btn !== editBtn) {
-                            btn.classList.remove('show');
-                        }
-                    });
+            e.stopPropagation();
 
-                    editBtn.classList.toggle('show');
-                });
+            document.querySelectorAll('.edit-button.show').forEach(btn => {
+                if (btn !== editBtn) btn.classList.remove('show');
             });
 
-            document.addEventListener('click', function (e) {
-                if (!e.target.closest('.message-bubble') && !e.target.closest('.edit-button')) {
-                    document.querySelectorAll('.edit-button').forEach(btn => {
-                        btn.classList.remove('show');
-                    });
-                }
-            });
+            editBtn.classList.toggle('show');
         });
 
         function openEditModal(messageId) {
@@ -420,13 +410,11 @@
 
                 messageBubble.textContent = newContent;
 
-                console.log('Message edited:', currentEditingMessageId, 'New content:', newContent);
-
-                // fetch(`/dms/edit_message/${currentEditingMessageId}`, {
-                //     method: 'POST',
-                //     body: JSON.stringify({ content: newContent }),
-                //     headers: { 'Content-Type': 'application/json' }
-                // })
+                fetch(`/dms/edit_message/${currentEditingMessageId}`, {
+                    method: 'POST',
+                    body: JSON.stringify({ content: newContent }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
 
                 closeEditModal();
             }
@@ -444,11 +432,17 @@
             }
         });
 
+        const chatId = {{ chat_id | tojson }};
+
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
             if (message) {
-                console.log('Message sent:', message);
+                fetch(`/dms/send_message/${chatId}`, {
+                    method: 'POST',
+                    body: JSON.stringify({ content: message }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
                 input.value = '';
             }
         }
@@ -459,12 +453,14 @@
             }
         });
 
-        const chatId = {{ chat_id | tojson }};
-        const messagesUrl = `/fetch_chat/${chatId}`;
+        const messagesUrl = `/dms/fetch_chat/${chatId}`;
         const defaultAvatar = {{ url_for('static', filename = 'iconmonstr-user-circle-thin.svg') | tojson }};
 
         async function fetchMessages() {
             try {
+                if (currentEditingMessageId != null) {
+                    return;
+                }
                 const res = await fetch(messagesUrl);
                 if (!res.ok) return;
 

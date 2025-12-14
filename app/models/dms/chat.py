@@ -67,22 +67,22 @@ def get_chats_with_unseen_messages(user_id):
     )
 
 def mark_chat_messages_as_seen(chat_id, user_id):
-    result = get_one(
-        """
-        UPDATE messages
-        SET
-            seen = TRUE,
-            updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
-        WHERE
-            chat_id = %s
-            AND sender_id != %s
-            AND seen = FALSE
-        RETURNING COUNT(*) AS updated;
-        """,
-        (chat_id, user_id)
-    )
-
-    return result["updated"] if result else 0
+    try:
+        result = get_one(
+            """
+            UPDATE messages
+            SET
+                seen = TRUE,
+                updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
+            WHERE
+                chat_id = %s
+                AND sender_id != %s
+                AND seen = FALSE;
+            """,
+            (chat_id, user_id)
+        )
+    except:
+        print("likely no messages to mark as seen, failing silently")
 
 def get_messages_for_chat(chat_id):
     return get_all(
