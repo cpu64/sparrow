@@ -5,3 +5,6 @@ __pycache__
 # database
 db/data
 db/logs
+
+# environment variables
+.env

@@ -1,16 +1,22 @@
 <div class="comments-section" id="commentsSection">
     <h2>Comments</h2>
     <form method="POST" class="comment-form">
-        <textarea name="comment_text" placeholder="Write your comment..." required></textarea>
+        <textarea name="comment_text" minlength="1" maxlength="500" placeholder="Write your comment..."
+            required></textarea>
         <button type="submit" class="action-button">Post Comment</button>
     </form>
 
     {% for comment in comments %}
     <div class="comment">
-        <button class="action-button delete-button comment-delete-btn"
-            onclick="deleteComment('{{ comment.id }}')">
-            Delete
-        </button>
+        {% if session.get('username') == comment.author or session.get('role') == 'admin' %}
+        <form method="POST" action="{{ url_for('viewpost.delete_comment', post_id=post.id, comment_id=comment.id) }}"
+            style="display:inline;">
+            <button type="submit" class="action-button delete-button comment-delete-btn"
+                onclick="return confirm('Are you sure you want to delete this comment?');">
+                Delete
+            </button>
+        </form>
+        {% endif %}
         <div class="comment-header">
             <a href="{{ url_for('profile.profile', user=comment.author) }}" title="View {{ comment.author }}'s profile">
                 <img src="https://avatar.iran.liara.run/public/6" alt="{{ comment.author }}'s avatar">

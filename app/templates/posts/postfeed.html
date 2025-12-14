@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    {% include 'includes/flash_messages.html' %}
     <div class="navigation">
         <a href="{{ url_for('home.home') }}">
             <button class="action-button">Home</button>
@@ -23,27 +24,30 @@
 
         <div class="filter-section">
             <h3>Filter by Tag</h3>
-            <select id="tagFilter" onchange="filterPosts()">
-                <option value="">All Tags</option>
-                {% for tag in all_tags %}
-                <option value="{{ tag }}">{{ tag }}</option>
-                {% endfor %}
-            </select>
+            <form method="GET" action="{{ url_for('postfeed.postfeed') }}">
+                <input type="text" name="tags" placeholder="e.g. programming, python"
+                    value="{{ request.args.get('tags', '') }}">
+                <button type="submit" class="action-button">Filter</button>
+            </form>
         </div>
 
         {% for post in posts %}
         <div class="post">
             <div class="post-header">
-                <a href="{{ url_for('profile.profile', user=post.author) }}" title="View {{ post.author }}'s profile">
-                    <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar">
+                <a href="{{ url_for('profile.profile', user=post.username) }}"
+                    title="View {{ post.username }}'s profile">
+                    <img src="{{ post.author_avatar or 'https://avatar.iran.liara.run/public/6' }}"
+                        alt="{{ post.username }}'s avatar">
                 </a>
                 <div class="post-info">
-                    <div class="post-author">{{ post.author }}</div>
-                    <div class="post-date">{{ post.created_at }}</div>
+                    <div class="post-author">{{ post.username }}</div>
+                    <div class="post-date">{{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') if post.created_at is not
+                        string else post.created_at.split('.')[0] }}
+                    </div>
                 </div>
             </div>
             <div class="post-content" style="color: {{ post.text_color }}; font-family: {{ post.text_font }};">
-                {{ post.text }}
+                {{ post.content }}
             </div>
             {% if post.tags %}
             <div class="post-tags">
@@ -52,20 +56,21 @@
                 {% endfor %}
             </div>
             {% endif %}
-            <a href="{{ url_for('viewpost.view_post', post_id=loop.index0) }}">
-                <button class="action-button">View Post</button>
-            </a>
+            <a href="{{ url_for('viewpost.view_post', post_id=post.id) }}" class="action-button" target="_self"
+                rel="noopener">View Post</a>
         </div>
         {% else %}
         <p>No posts available.</p>
         {% endfor %}
-    </div>
 
-    <script>
-        function filterPosts() {
-            // TODO: Implement filtering functionality
-        }
-    </script>
+        {% if next_last %}
+        <div class="load-more">
+            <a class="action-button" href="{{ url_for('postfeed.postfeed', tags=tags_query, last=next_last) }}">
+                Load more
+            </a>
+        </div>
+        {% endif %}
+    </div>
 </body>
 
 </html>
