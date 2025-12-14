@@ -28,12 +28,16 @@ def postfeed():
 
     last = request.args.get("last") or None
 
-    posts = Post.get_posts(limit=10, tags=tags, last_retrieved=last)
+    limit = 10
+    posts = Post.get_posts(limit=limit + 1, tags=tags, last_retrieved=last)
     if isinstance(posts, str):
         flash(f"Error retrieving posts: {posts}", "error")
         posts = []
 
-    for post in posts:
+    has_more = len(posts) > limit
+    posts_to_render = posts[:limit]
+
+    for post in posts_to_render:
         tag_rows = Tag.get_tags_for_post(post["id"])
         if isinstance(tag_rows, str):
             flash(
@@ -44,18 +48,19 @@ def postfeed():
             post["tags"] = [t["name"] for t in tag_rows]
 
     next_last = None
-    if posts:
-        ca = posts[-1]["created_at"]
+    if has_more and posts_to_render:
+        ca = posts_to_render[-1]["created_at"]
         next_last = (
             ca.isoformat() if hasattr(ca, "isoformat") else str(ca).split(".")[0]
         )
 
     return render_template(
         "posts/postfeed.html",
-        posts=posts,
+        posts=posts_to_render,
         role=session.get("role", "guest"),
         tags_query=tag_filter,
         next_last=next_last,
+        has_more=has_more,
     )
 
 
@@ -240,10 +245,10 @@ def delete_comment(post_id, comment_id):
     comment = Comment.get_comment(comment_id)
     if not comment or isinstance(comment, str):
         flash("Comment not found.", "error")
-        return redirect(url_for("viewpost.view_post", post_id=post_id))
+        return redirect(url_for("viewpost.view_post", post_id=post_id, no_view_inc=1))
     if session.get("role") != "admin" and session.get("username") != comment["author"]:
         flash("You do not have permission to delete this comment.", "error")
-        return redirect(url_for("viewpost.view_post", post_id=post_id))
+        return redirect(url_for("viewpost.view_post", post_id=post_id, no_view_inc=1))
     Comment.remove_comment(comment_id)
     flash("Comment deleted.", "success")
-    return redirect(url_for("viewpost.view_post", post_id=post_id))
+    return redirect(url_for("viewpost.view_post", post_id=post_id, no_view_inc=1))

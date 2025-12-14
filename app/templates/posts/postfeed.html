@@ -56,18 +56,22 @@
                 {% endfor %}
             </div>
             {% endif %}
-            <a href="{{ url_for('viewpost.view_post', post_id=post.id) }}" class="action-button" target="_self"
-                rel="noopener">View Post</a>
+            <a href="{{ url_for('viewpost.view_post', post_id=post.id) }}" target="_self" rel="noopener"><button
+                    class="action-button">View Post</button></a>
         </div>
         {% else %}
         <p>No posts available.</p>
         {% endfor %}
 
-        {% if next_last %}
+        {% if has_more %}
         <div class="load-more">
-            <a class="action-button" href="{{ url_for('postfeed.postfeed', tags=tags_query, last=next_last) }}">
-                Load more
+            <a href="{{ url_for('postfeed.postfeed', tags=tags_query, last=next_last) }}">
+                <button class="action-button">Load more</button>
             </a>
+        </div>
+        {% elif posts|length > 0 %}
+        <div class="load-more">
+            <span>No more posts available.</span>
         </div>
         {% endif %}
     </div>
