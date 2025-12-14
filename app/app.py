@@ -7,9 +7,7 @@ from models.db import init_db
 from models.users.user import get_data
 from controllers.home import home_bp
 from controllers.users.user import login_bp, logout_bp, avatars_bp, profile_bp, register_bp
-from controllers.gallery.gallery import gallery_bp
-from controllers.gallery.image import image_bp
-from controllers.gallery.image_comment import image_comments_bp
+from controllers.gallery.gallery import gallery_bp, image_bp, image_comments_bp
 from controllers.posts.posts import postfeed_bp, createpost_bp, viewpost_bp
 from controllers.dms.dms import dms_blueprint
 import secrets
