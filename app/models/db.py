@@ -135,7 +135,7 @@ def init_db():
 
         cur.execute("""
         INSERT INTO avatars (name, url)
-        VALUES ('Default Sparrow', 'https://avatar.iran.liara.run/public/6')
+        VALUES ('Default Sparrow', 'https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png')
         ON CONFLICT (name) DO NOTHING;""")
 
         cur.execute("""

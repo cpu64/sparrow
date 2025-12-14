@@ -6,14 +6,8 @@ from controllers.dms.mail_reports import start_email_loop
 from models.db import init_db
 from models.users.user import get_data
 from controllers.home import home_bp
-from controllers.users.login import login_bp
-from controllers.users.logout import logout_bp
-from controllers.users.avatars import avatars_bp
-from controllers.users.profile import profile_bp
-from controllers.users.register import register_bp
-from controllers.gallery.gallery import gallery_bp
-from controllers.gallery.image import image_bp
-from controllers.gallery.image_comment import image_comments_bp
+from controllers.users.user import login_bp, logout_bp, avatars_bp, profile_bp, register_bp
+from controllers.gallery.gallery import gallery_bp, image_bp, image_comments_bp
 from controllers.posts.posts import postfeed_bp, createpost_bp, viewpost_bp
 from controllers.dms.dms import dms_blueprint
 import secrets
