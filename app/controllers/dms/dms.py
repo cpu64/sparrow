@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 from models.dms.message import create_message, update_message_contents
 from models.users.avatar import get_avatar
-from models.dms.chat import create_new_chat, get_chat_name, list_chats_for_user, get_messages_for_chat, mark_chat_messages_as_seen
+from models.dms.chat import create_new_chat, get_chat_name, leave_chat, list_chats_for_user, get_messages_for_chat, mark_chat_messages_as_seen
 from models.users.user import get_data, get_username
 
 dms_blueprint = Blueprint('dms', __name__)
@@ -132,3 +132,15 @@ def send_message(chat_id):
     create_message(chat_id, user_id, new_text)
 
     return jsonify({"status": "ok"})
+
+@dms_blueprint.route('/leave_chat/<chat_id>', methods=['GET'])
+def leave_selected_chat(chat_id):
+    role = session.get("role", "")
+    if role == "guest":
+        flash(f"You do not have permisions to access that page.", "error")
+        return redirect(url_for('home.home'))
+
+    user_id = session.get("user_id")
+    leave_chat(chat_id, user_id)
+
+    return redirect(url_for("dms.dms"))
