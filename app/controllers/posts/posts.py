@@ -93,7 +93,7 @@ def create_post():
 
         if err := Post.check_length("content", content):
             flash(f"Content must be between {err} characters.", "error")
-        if not analyze_text(content, threshold=4):
+        if not analyze_text(content, threshold=2):
             flash(
                 "Content violates safety policies. Please modify and try again.",
                 "error",
@@ -185,7 +185,7 @@ def view_post(post_id):
             return redirect(
                 url_for("viewpost.view_post", post_id=post_id, no_view_inc=1)
             )
-        if not analyze_text(comment_text, threshold=4):
+        if not analyze_text(comment_text, threshold=2):
             flash(
                 "Comment violates safety policies. Please modify and try again.",
                 "error",
