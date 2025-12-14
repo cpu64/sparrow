@@ -3,11 +3,16 @@ from azure.ai.contentsafety import ContentSafetyClient
 from azure.core.credentials import AzureKeyCredential
 from azure.core.exceptions import HttpResponseError
 from azure.ai.contentsafety.models import AnalyzeTextOptions, TextCategory
+from flask import flash
 
 
 def analyze_text(text, threshold=4):
-    key = os.environ["CONTENT_SAFETY_KEY"]
-    endpoint = os.environ["CONTENT_SAFETY_ENDPOINT"]
+    try:
+        key = os.environ["CONTENT_SAFETY_KEY"]
+        endpoint = os.environ["CONTENT_SAFETY_ENDPOINT"]
+    except KeyError:
+        flash("Content safety service is not configured.", "error")
+        return False
 
     client = ContentSafetyClient(endpoint, AzureKeyCredential(key))
     request = AnalyzeTextOptions(text=text)
