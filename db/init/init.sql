@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_login_attempt TIMESTAMP,
     banned BOOLEAN NOT NULL DEFAULT FALSE,
     admin BOOLEAN NOT NULL DEFAULT FALSE,
-    avatar_id INT REFERENCES avatars(id)
+    avatar_id INT NOT NULL DEFAULT 1 REFERENCES avatars(id)
 );
 
 INSERT INTO users (
@@ -51,7 +51,7 @@ INSERT INTO users (
         NULL,
         'Avery',
         'Stone',
-        'avery.stone@example.com',
+        'luna.admin@example.com',
         'System administrator and founder of the Sparrow platform.',
         '1990-05-14',
         '+12025550111',

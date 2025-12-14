@@ -10,15 +10,18 @@
 
 <body>
     <div class="container py-3">
-        <form>
+
+        {% include 'includes/flash_messages.html' %}
+
+        <form method="POST" action="{{ url_for('dms.create_chat') }}">
             <h1>New chat</h1>
             <div class="form-group">
                 <label for="username">User to invite</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Cat 1">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Cat 1">
             </div>
             <div class="form-group">
-                <label for="username">Chat name</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Chat name...">
+                <label for="chat_name">Chat name</label>
+                <input type="text" class="form-control" id="chat_name" name="chat_name" placeholder="Chat name...">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

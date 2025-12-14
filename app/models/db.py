@@ -24,7 +24,9 @@ def execute(query, values=()):
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute(query, values)
+        result = cur.fetchone() if cur.description else None
         conn.commit()
+        return result[0] if result else None
 
     except Exception as e:
         if conn:
@@ -48,6 +50,7 @@ def get_one(query, values=(), commit=False):
         if commit:
             conn.commit()
         data = cur.fetchone()
+        conn.commit()
 
         if data:
             columns = [desc[0] for desc in cur.description]
@@ -74,6 +77,7 @@ def get_all(query, values=()):
         cur = conn.cursor()
         cur.execute(query, values)
         data = cur.fetchall()
+        conn.commit()
 
         if data:
             columns = [desc[0] for desc in cur.description]
@@ -102,6 +106,9 @@ def init_db():
         from .posts.post import POST_COLUMN_LENGTHS
         from .posts.comment import COMMENT_COLUMN_LENGTHS
         from .posts.tag import TAG_COLUMN_LENGTHS
+        from .gallery.gallery import GALLERY_COLUMN_LENGTHS
+        from .gallery.image import IMAGE_COLUMN_LENGTHS
+        from .gallery.image_comment import COMMENT_COLUMN_LENGTHS
 
         conn = get_db_connection()
         conn.autocommit = True
@@ -126,8 +133,12 @@ def init_db():
             {"name_length": AVATAR_COLUMN_LENGTHS["name"][1]},
         )
 
-        cur.execute(
-            """
+        cur.execute("""
+        INSERT INTO avatars (name, url)
+        VALUES ('Default Sparrow', 'https://avatar.iran.liara.run/public/6')
+        ON CONFLICT (name) DO NOTHING;""")
+
+        cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             username VARCHAR(%(username_length)s) UNIQUE NOT NULL,
@@ -149,7 +160,7 @@ def init_db():
             last_login_attempt TIMESTAMP,
             banned BOOLEAN NOT NULL DEFAULT FALSE,
             admin BOOLEAN NOT NULL DEFAULT FALSE,
-            avatar_id INT REFERENCES avatars(id)
+            avatar_id INT NOT NULL DEFAULT 1 REFERENCES avatars(id)
         );
         """,
             {
@@ -241,6 +252,81 @@ def init_db():
         ON CONFLICT (name) DO NOTHING;
         """
         )
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS chats (
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            name VARCHAR(60) NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+        );
+        """)
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            text VARCHAR(255) NOT NULL,
+            seen BOOLEAN NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            sender_id INT NOT NULL,
+            chat_id INT NOT NULL,
+            CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) references users(id) ON DELETE CASCADE,
+            CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) references chats(id) ON DELETE CASCADE
+        );
+        """)
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS chat_members (
+            member_id INT NOT NULL,
+            chat_id INT NOT NULL,
+            CONSTRAINT fk_member_id FOREIGN KEY (member_id) references users(id),
+            CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) references chats(id)
+        );
+        """)
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS galleries (
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            name VARCHAR(%(name_length)s) NOT NULL,
+            description VARCHAR(%(description_length)s),
+            background_color VARCHAR(%(background_color_length)s),
+            created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+        );
+        """, {
+            'name_length': GALLERY_COLUMN_LENGTHS['name'][1],
+            'description_length': GALLERY_COLUMN_LENGTHS['description'][1],
+            'background_color_length': GALLERY_COLUMN_LENGTHS['background_color'][1]
+        })
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS images (
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            name VARCHAR(%(name_length)s) NOT NULL,
+            url VARCHAR(%(url_length)s) NOT NULL,
+            description VARCHAR(%(description_length)s),
+            location VARCHAR(%(location_length)s),
+            taken_at DATE,
+            created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            gallery_id INT NOT NULL REFERENCES galleries(id) ON DELETE CASCADE
+        );
+        """, {
+            'name_length': IMAGE_COLUMN_LENGTHS['name'][1],
+            'url_length': IMAGE_COLUMN_LENGTHS['url'][1],
+            'description_length': IMAGE_COLUMN_LENGTHS['description'][1],
+            'location_length': IMAGE_COLUMN_LENGTHS['location'][1]
+        })
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS image_comments (
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            text VARCHAR(%(text_length)s) NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
+            user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            image_id INT NOT NULL REFERENCES images(id) ON DELETE CASCADE
+        );
+        """, {'text_length': COMMENT_COLUMN_LENGTHS['text'][1]})
 
         print("Database initialized successfully!")
 

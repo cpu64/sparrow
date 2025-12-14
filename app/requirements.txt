@@ -3,3 +3,4 @@ flask
 psycopg2
 qrcode
 azure-ai-contentsafety
+google-cloud-storage

@@ -22,6 +22,13 @@ def check_length(key, value):
         return False
     return f"{USER_COLUMN_LENGTHS[key][0]} and {USER_COLUMN_LENGTHS[key][1]}"
 
+def get_username(id):
+    data = get_one("""
+        SELECT username FROM users WHERE id = %s
+        """, (id,))
+
+    return data['username']
+
 def get_data(username, fields):
     try:
         columns_to_select = ', '.join(fields)

@@ -8,3 +8,7 @@
 ./db/init/
 ./db/data/
 ./db/logs/
+
+**/gcs-key.json
+**/.env
+**/.env.*
