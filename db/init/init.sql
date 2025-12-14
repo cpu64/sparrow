@@ -142,14 +142,14 @@ VALUES
 ('TEST20', '#ffffff', 1, 1, (CURRENT_TIMESTAMP AT TIME ZONE 'UTC+2') - INTERVAL '23 minutes');
 
 
-CREATE TABLE IF NOT EXISTS comments (
+CREATE TABLE IF NOT EXISTS post_comments (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     content VARCHAR(500) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC+2'),
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE
 );
-INSERT INTO comments (content, user_id, post_id, created_at)
+INSERT INTO post_comments (content, user_id, post_id, created_at)
 VALUES
 ('Great to be here!', 3, 1, (CURRENT_TIMESTAMP AT TIME ZONE 'UTC+2') - INTERVAL '30 seconds'),
 ('Welcome aboard!', 2, 1, (CURRENT_TIMESTAMP AT TIME ZONE 'UTC+2') - INTERVAL '20 seconds'),

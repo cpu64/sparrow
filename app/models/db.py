@@ -202,7 +202,7 @@ def init_db():
 
         cur.execute(
             """
-        CREATE TABLE IF NOT EXISTS comments (
+        CREATE TABLE IF NOT EXISTS post_comments (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             content VARCHAR(%(content_length)s) NOT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC+2'),

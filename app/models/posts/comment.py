@@ -16,7 +16,7 @@ def get_comments(post_id):
             """
             SELECT c.id, c.content AS text, c.created_at,
                    u.username AS author, COALESCE(a.url, 'https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png') AS avatar_url
-            FROM comments c
+            FROM post_comments c
             JOIN users u ON c.user_id = u.id
             LEFT JOIN avatars a ON u.avatar_id = a.id
             WHERE c.post_id = %s
@@ -38,7 +38,7 @@ def get_comment(comment_id):
             """
             SELECT c.id, c.content, c.created_at,
                    u.username AS author
-            FROM comments c
+            FROM post_comments c
             JOIN users u ON c.user_id = u.id
             WHERE c.id = %s
         """,
@@ -56,7 +56,7 @@ def add_comment(post_id, user_id, content):
     try:
         execute(
             """
-            INSERT INTO comments (post_id, user_id, content)
+            INSERT INTO post_comments (post_id, user_id, content)
             VALUES (%s, %s, %s)
         """,
             (post_id, user_id, content),
@@ -72,7 +72,7 @@ def remove_comment(comment_id):
     try:
         execute(
             """
-             DELETE FROM comments WHERE id = %s
+             DELETE FROM post_comments WHERE id = %s
         """,
             (comment_id,),
         )
