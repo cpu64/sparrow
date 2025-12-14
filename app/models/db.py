@@ -104,7 +104,7 @@ def init_db():
         from .users.avatar import AVATAR_COLUMN_LENGTHS
         from .users.user import USER_COLUMN_LENGTHS
         from .posts.post import POST_COLUMN_LENGTHS
-        from .posts.comment import COMMENT_COLUMN_LENGTHS
+        from .posts.comment import COMMENT_COLUMN_LENGTHS as POST_COMMENT_COLUMN_LENGTHS
         from .posts.tag import TAG_COLUMN_LENGTHS
         from .gallery.gallery import GALLERY_COLUMN_LENGTHS
         from .gallery.image import IMAGE_COLUMN_LENGTHS
@@ -133,12 +133,15 @@ def init_db():
             {"name_length": AVATAR_COLUMN_LENGTHS["name"][1]},
         )
 
-        cur.execute("""
+        cur.execute(
+            """
         INSERT INTO avatars (name, url)
         VALUES ('Default Sparrow', 'https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png')
-        ON CONFLICT (name) DO NOTHING;""")
+        ON CONFLICT (name) DO NOTHING;"""
+        )
 
-        cur.execute("""
+        cur.execute(
+            """
         CREATE TABLE IF NOT EXISTS users (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             username VARCHAR(%(username_length)s) UNIQUE NOT NULL,
@@ -208,7 +211,7 @@ def init_db():
         );
         """,
             {
-                "content_length": COMMENT_COLUMN_LENGTHS["content"][1],
+                "content_length": POST_COMMENT_COLUMN_LENGTHS["content"][1],
             },
         )
 
@@ -253,16 +256,19 @@ def init_db():
         """
         )
 
-        cur.execute("""
+        cur.execute(
+            """
         CREATE TABLE IF NOT EXISTS chats (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             name VARCHAR(60) NOT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
             updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
         );
-        """)
+        """
+        )
 
-        cur.execute("""
+        cur.execute(
+            """
         CREATE TABLE IF NOT EXISTS messages (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             text VARCHAR(255) NOT NULL,
@@ -274,17 +280,21 @@ def init_db():
             CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) references users(id) ON DELETE CASCADE,
             CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) references chats(id) ON DELETE CASCADE
         );
-        """)
+        """
+        )
 
-        cur.execute("""
+        cur.execute(
+            """
         CREATE TABLE IF NOT EXISTS chat_members (
             member_id INT NOT NULL,
             chat_id INT NOT NULL,
             CONSTRAINT fk_member_id FOREIGN KEY (member_id) references users(id),
             CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) references chats(id)
         );
-        """)
-        cur.execute("""
+        """
+        )
+        cur.execute(
+            """
         CREATE TABLE IF NOT EXISTS galleries (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             name VARCHAR(%(name_length)s) NOT NULL,
@@ -294,13 +304,18 @@ def init_db():
             updated_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
             user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
         );
-        """, {
-            'name_length': GALLERY_COLUMN_LENGTHS['name'][1],
-            'description_length': GALLERY_COLUMN_LENGTHS['description'][1],
-            'background_color_length': GALLERY_COLUMN_LENGTHS['background_color'][1]
-        })
+        """,
+            {
+                "name_length": GALLERY_COLUMN_LENGTHS["name"][1],
+                "description_length": GALLERY_COLUMN_LENGTHS["description"][1],
+                "background_color_length": GALLERY_COLUMN_LENGTHS["background_color"][
+                    1
+                ],
+            },
+        )
 
-        cur.execute("""
+        cur.execute(
+            """
         CREATE TABLE IF NOT EXISTS images (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             name VARCHAR(%(name_length)s) NOT NULL,
@@ -311,14 +326,17 @@ def init_db():
             created_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC'),
             gallery_id INT NOT NULL REFERENCES galleries(id) ON DELETE CASCADE
         );
-        """, {
-            'name_length': IMAGE_COLUMN_LENGTHS['name'][1],
-            'url_length': IMAGE_COLUMN_LENGTHS['url'][1],
-            'description_length': IMAGE_COLUMN_LENGTHS['description'][1],
-            'location_length': IMAGE_COLUMN_LENGTHS['location'][1]
-        })
+        """,
+            {
+                "name_length": IMAGE_COLUMN_LENGTHS["name"][1],
+                "url_length": IMAGE_COLUMN_LENGTHS["url"][1],
+                "description_length": IMAGE_COLUMN_LENGTHS["description"][1],
+                "location_length": IMAGE_COLUMN_LENGTHS["location"][1],
+            },
+        )
 
-        cur.execute("""
+        cur.execute(
+            """
         CREATE TABLE IF NOT EXISTS image_comments (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             text VARCHAR(%(text_length)s) NOT NULL,
@@ -326,7 +344,9 @@ def init_db():
             user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
             image_id INT NOT NULL REFERENCES images(id) ON DELETE CASCADE
         );
-        """, {'text_length': COMMENT_COLUMN_LENGTHS['text'][1]})
+        """,
+            {"text_length": COMMENT_COLUMN_LENGTHS["text"][1]},
+        )
 
         print("Database initialized successfully!")
 
