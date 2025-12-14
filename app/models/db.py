@@ -119,6 +119,11 @@ def init_db():
         """, {'name_length': AVATAR_COLUMN_LENGTHS['name'][1]})
 
         cur.execute("""
+        INSERT INTO avatars (name, url)
+        VALUES ('Default Sparrow', 'https://avatar.iran.liara.run/public/6')
+        ON CONFLICT (name) DO NOTHING;""")
+
+        cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             username VARCHAR(%(username_length)s) UNIQUE NOT NULL,
@@ -140,7 +145,7 @@ def init_db():
             last_login_attempt TIMESTAMP,
             banned BOOLEAN NOT NULL DEFAULT FALSE,
             admin BOOLEAN NOT NULL DEFAULT FALSE,
-            avatar_id INT REFERENCES avatars(id)
+            avatar_id INT NOT NULL DEFAULT 1 REFERENCES avatars(id)
         );
         """, {
             'username_length': USER_COLUMN_LENGTHS['username'][1],
