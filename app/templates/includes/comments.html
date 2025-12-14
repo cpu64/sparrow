@@ -19,7 +19,7 @@
         {% endif %}
         <div class="comment-header">
             <a href="{{ url_for('profile.profile', user=comment.author) }}" title="View {{ comment.author }}'s profile">
-                <img src="https://avatar.iran.liara.run/public/6" alt="{{ comment.author }}'s avatar">
+                <img src="{{ comment.avatar_url }}" alt="{{ comment.author }}'s avatar">
             </a>
             <div>
                 <div class="comment-author">{{ comment.author }}</div>

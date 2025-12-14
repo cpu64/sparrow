@@ -15,9 +15,10 @@ def get_comments(post_id):
         comments = get_all(
             """
             SELECT c.id, c.content AS text, c.created_at,
-                   u.username AS author
+                   u.username AS author, COALESCE(a.url, 'https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png') AS avatar_url
             FROM comments c
             JOIN users u ON c.user_id = u.id
+            LEFT JOIN avatars a ON u.avatar_id = a.id
             WHERE c.post_id = %s
             ORDER BY c.created_at DESC
         """,
