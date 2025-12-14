@@ -10,11 +10,11 @@ CREATE TABLE IF NOT EXISTS avatars (
 
 INSERT INTO avatars (name, url)
 VALUES
-    ('Default Sparrow', 'https://avatar.iran.liara.run/public/6'),
-    ('Sky Wanderer', 'https://avatar.iran.liara.run/public/17'),
-    ('Night Owl', 'https://avatar.iran.liara.run/public/9'),
-    ('Crimson Hawk', 'https://avatar.iran.liara.run/public/23'),
-    ('Golden Finch', 'https://avatar.iran.liara.run/public/48');
+    ('Default Sparrow', 'https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png'),
+    ('Sky Wanderer', 'https://github.githubassets.com/assets/pair-extraordinaire-default-579438a20e01.png'),
+    ('Night Owl', 'https://raw.githubusercontent.com/drknzz/GitHub-Achievements/main/Media/Badges/Heart-on-your-sleeve/PNG/HeartOnYourSleeve.png'),
+    ('Crimson Hawk', 'https://raw.githubusercontent.com/drknzz/GitHub-Achievements/main/Media/Badges/Quick-Draw/PNG/Skin-Tones/QuickDraw_SkinTone1.png'),
+    ('Golden Finch', 'https://raw.githubusercontent.com/drknzz/GitHub-Achievements/main/Media/Badges/Galaxy-Brain/PNG/GalaxyBrain.png');
 
 CREATE TABLE IF NOT EXISTS users (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
