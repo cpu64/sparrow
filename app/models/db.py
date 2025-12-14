@@ -14,7 +14,9 @@ db_params = {
 
 
 def get_db_connection():
-    return psycopg2.connect(**db_params)
+    conn = psycopg2.connect(**db_params)
+    conn.set_client_encoding("UTF8")
+    return conn
 
 
 def execute(query, values=()):
