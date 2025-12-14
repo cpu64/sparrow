@@ -31,8 +31,15 @@ body {
 }
 
 .filter-section {
-    padding: 20px;
-    margin-bottom: 20px;
+    background: var(--secondary-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+    padding: 24px 24px 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
 }
 
 .post {
@@ -301,11 +308,60 @@ body {
     margin: 0 0 16px;
 }
 
-.filter-section {
-    padding: 20px;
-    margin-bottom: 20px;
+.filter-section h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    color: var(--font-primary-color);
 }
 
-.filter-section h3 {
-    margin: 0 0 10px 0;
+.filter-section form {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-section input[type="text"] {
+    flex: 1 1 220px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background: var(--input-bg);
+    color: var(--font-primary-color);
+    font-size: 16px;
+    transition: border-color var(--transition-speed) ease;
+}
+
+.filter-section input[type="text"]:focus {
+    border-color: var(--input-focus);
+    outline: none;
+    box-shadow: 0 0 6px rgba(90, 69, 255, 0.2);
+}
+
+.filter-section .action-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: var(--border-radius);
+    margin-left: 0;
+}
+
+.filter-section .help-text {
+    font-size: 13px;
+    color: #bdbdbd;
+    margin-top: 4px;
+    margin-left: 2px;
+}
+
+.filter-section a.action-button {
+    background: #e0e0e0;
+    color: #333;
+    text-decoration: none;
+    border: none;
+    margin-left: 0;
+    transition: background 0.2s;
+}
+
+.filter-section a.action-button:hover {
+    background: #cccccc;
 }

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Post: {{ post.text.split()[:5]|join(' ') }}{% if post.text.split()|length > 5 %}...{% endif %}</title>
+    <title>Post: {{ post.content.split()[:5]|join(' ') }}{% if post.content.split()|length > 5 %}...{% endif %}</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.svg') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
@@ -10,23 +10,24 @@
 </head>
 
 <body>
+    {% include 'includes/flash_messages.html' %}
     <div class="post-container card">
         <a href="{{ url_for('postfeed.postfeed') }}">
             <button class="action-button">Back to the Feed</button>
         </a>
 
         <div class="post-header">
-            <a href="{{ url_for('profile.profile', user=post.author) }}" title="View {{ post.author }}'s profile">
-                <img src="https://avatar.iran.liara.run/public/6" alt="{{ post.author }}'s avatar">
+            <a href="{{ url_for('profile.profile', user=post.username) }}" title="View {{ post.username }}'s profile">
+                <img src="{{ post.author_avatar }}" alt="{{ post.username }}'s avatar">
             </a>
             <div>
-                <div class="post-author">{{ post.author }}</div>
-                <div class="post-date">{{ post.created_at }}</div>
+                <div class="post-author">{{ post.username }}</div>
+                <div class="post-date">{{ post.created_at.strftime('%Y-%m-%d %H:%M') if post.created_at else '' }}</div>
             </div>
         </div>
 
         <div class="post-content" style="color: {{ post.text_color }}; font-family: {{ post.text_font }};">
-            {{ post.text }}
+            {{ post.content }}
         </div>
 
         {% if post.tags %}
@@ -41,35 +42,29 @@
             <button class="action-button toggle-comments-btn" onclick="toggleComments()">
                 View Comments ({{ comments|length }})
             </button>
-            <button class="action-button delete-button" onclick="deletePost()">
-                Delete Post
-            </button>
+            {% if session.get('username') == post.username or session.get('role') == 'admin' %}
+            <form method="POST" action="{{ url_for('viewpost.delete_post', post_id=post.id) }}" style="display:inline;">
+                <button type="submit" class="action-button delete-button"
+                    onclick="return confirm('Are you sure you want to delete this post?');">
+                    Delete Post
+                </button>
+            </form>
+            {% endif %}
         </div>
+        <div>Views: {{ post.views }}</div>
 
-    {% include 'includes/comments.html' %}
+        {% include 'includes/comments.html' %}
 
-    <script>
-        function toggleComments() {
-            const commentsSection = document.getElementById('commentsSection');
-            const btn = document.querySelector('.toggle-comments-btn');
-            commentsSection.classList.toggle('active');
-            btn.textContent = commentsSection.classList.contains('active')
-                ? `Hide Comments ({{ comments|length }})`
-                : `View Comments ({{ comments|length }})`;
-        }
-
-        function deletePost() {
-            if (confirm('Are you sure you want to delete this post?')) {
-                // TODO
+        <script>
+            function toggleComments() {
+                const commentsSection = document.getElementById('commentsSection');
+                const btn = document.querySelector('.toggle-comments-btn');
+                commentsSection.classList.toggle('active');
+                btn.textContent = commentsSection.classList.contains('active')
+                    ? `Hide Comments ({{ comments|length }})`
+                    : `View Comments ({{ comments|length }})`;
             }
-        }
-
-        function deleteComment(id) {
-            if (confirm('Are you sure you want to delete this comment?')) {
-                // TODO
-            }
-        }
-    </script>
+        </script>
 </body>
 
 </html>
