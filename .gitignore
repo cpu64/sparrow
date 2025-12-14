@@ -7,4 +7,6 @@ db/data
 db/logs
 
 # secrets
-app/gcs-key.json
+**/gcs-key.json
+**/.env
+**/.env.*
