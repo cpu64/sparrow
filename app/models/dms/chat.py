@@ -54,17 +54,24 @@ def get_chats_with_unseen_messages(user_id):
             c.updated_at,
             COUNT(m.id) AS unseen_count
         FROM chats c
-        JOIN chat_members cm ON cm.chat_id = c.id
-        JOIN messages m ON m.chat_id = c.id
+        JOIN chat_members cm
+            ON cm.chat_id = c.id
+        JOIN messages m
+            ON m.chat_id = c.id
         WHERE
             cm.member_id = %s
             AND m.seen = FALSE
             AND m.sender_id != %s
-        GROUP BY c.id
-        ORDER BY c.updated_at DESC;
+        GROUP BY
+            c.id, c.name, c.updated_at
+        ORDER BY
+            c.updated_at DESC;
         """,
         (user_id, user_id)
     )
+
+def get_all_users():
+    return get_all("SELECT id, email FROM users ORDER BY id;")
 
 def mark_chat_messages_as_seen(chat_id, user_id):
     try:
