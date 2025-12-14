@@ -147,7 +147,12 @@ def view_post(post_id):
     if not post or isinstance(post, str):
         flash(f"Post not found. id = {post_id}, {post}", "error")
         return redirect(url_for("postfeed.postfeed"))
-    Post.increase_views(int(post_id))
+
+    no_inc = request.args.get("no_view_inc") == "1"
+    if request.method == "GET" and not no_inc:
+        Post.increase_views(int(post_id))
+        post["views"] += 1
+
     comments = Comment.get_comments(int(post_id))
     if isinstance(comments, str):
         flash(f"Error retrieving comments: {comments}", "error")
@@ -163,31 +168,43 @@ def view_post(post_id):
         if session.get("role") == "guest" or not session.get("username"):
             flash("You must be logged in to comment.", "error")
             return redirect(url_for("login.login"))
+
         comment_text = request.form.get("comment_text", "").strip()
         if not comment_text:
             flash("Comment cannot be empty.", "error")
-            return redirect(url_for("viewpost.view_post", post_id=post_id))
+            return redirect(
+                url_for("viewpost.view_post", post_id=post_id, no_view_inc=1)
+            )
         if err := Comment.check_length("content", comment_text):
             flash(f"Comment must be between {err} characters.", "error")
-            return redirect(url_for("viewpost.view_post", post_id=post_id))
+            return redirect(
+                url_for("viewpost.view_post", post_id=post_id, no_view_inc=1)
+            )
         if not analyze_text(comment_text, threshold=4):
             flash(
                 "Comment violates safety policies. Please modify and try again.",
                 "error",
             )
-            return redirect(url_for("viewpost.view_post", post_id=post_id))
+            return redirect(
+                url_for("viewpost.view_post", post_id=post_id, no_view_inc=1)
+            )
+
         username = session.get("username")
         user = User.get_data(username, ["id"])
         if isinstance(user, str) or not user:
             flash("User not found.", "error")
-            return redirect(url_for("viewpost.view_post", post_id=post_id))
+            return redirect(
+                url_for("viewpost.view_post", post_id=post_id, no_view_inc=1)
+            )
+
         user_id = user["id"]
         err = Comment.add_comment(post_id, user_id, comment_text)
         if err:
             flash(f"Error adding comment: {err}", "error")
         else:
             flash("Comment added successfully.", "success")
-        return redirect(url_for("viewpost.view_post", post_id=post_id))
+
+        return redirect(url_for("viewpost.view_post", post_id=post_id, no_view_inc=1))
 
     return render_template(
         "posts/viewpost.html",
