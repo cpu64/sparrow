@@ -6,6 +6,13 @@ This project uses Docker to set up a Flask application with a PostgreSQL databas
 
 Ensure you have Docker installed on your machine. If you don't, follow the instructions in the [Docker documentation](https://docs.docker.com/get-docker/) to install it.
 
+You'll also need Google Cloud Storage secrets file `gcs-key.json` placed in `./app` directory.
+To adjust different GCS credential or bucket variables adjust these `Dockerfile` lines:
+```
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/gcs-key.json \
+    GCS_BUCKET_NAME=sparrow-flask-images-2025
+```
+
 ## Build the Docker Image
 
 To build the Docker image for the application, run the following command in the root directory of the project:

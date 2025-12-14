@@ -1,4 +1,5 @@
 # app.py
+from pathlib import Path
 from flask import Flask, redirect, url_for, session, flash
 from datetime import datetime, timezone, timedelta
 from models.db import init_db
@@ -62,7 +63,18 @@ def index():
     return redirect(url_for('home.home'))
 
 
+def check_secrets():
+    if os.getenv('GOOGLE_APPLICATION_CREDENTIALS') is None:
+        raise EnvironmentError("GOOGLE_APPLICATION_CREDENTIALS is not set")
+    else:
+        if not Path(os.getenv('GOOGLE_APPLICATION_CREDENTIALS')).is_file():
+            raise FileNotFoundError(f"GOOGLE_APPLICATION_CREDENTIALS file not found at {os.getenv('GOOGLE_APPLICATION_CREDENTIALS')}")
+
+    if os.getenv('GCS_BUCKET_NAME') is None:
+        raise EnvironmentError("GCS_BUCKET_NAME is not set")
+
 if __name__ == '__main__':
+    check_secrets()
     init_db()
     app.run(debug=True, host=os.getenv('FALSK_HOST', '0.0.0.0'), port=os.getenv('FALSK_PORT', '5000'))
 

@@ -16,4 +16,7 @@ ENV PGDATABASE=sparrow \
     FALSK_HOST=0.0.0.0 \
     FALSK_PORT=5000
 
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/gcs-key.json \
+    GCS_BUCKET_NAME=sparrow-flask-images-2025
+
 CMD ["python", "app.py"]
