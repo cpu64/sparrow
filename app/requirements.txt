@@ -2,3 +2,4 @@ bcrypt
 flask
 psycopg2
 qrcode
+google-cloud-storage

@@ -13,24 +13,34 @@
         .card-text { color: #c5c5c5; }
         .form-control, .form-control:focus { background-color: var(--input-bg); color: var(--font-primary-color); border-color: var(--input-border); }
         .form-control:focus { background-color: #fffcc8; color: #000000; border-color: var(--input-focus); }
+        .form-control::placeholder { color: #888; }
     </style>
 </head>
 <body>
     <div class="container py-5">
         {% include 'includes/flash_messages.html' %}
 
-        <div class="d-flex justify-content-between align-items-center mb-5 p-4 rounded bg-dark bg-opacity-25 border border-secondary">
+        <div class="d-flex justify-content-between align-items-center mb-4 p-4 rounded bg-dark bg-opacity-25 border border-secondary">
             <div>
-                <h1 class="text-white mb-1">My Galleries</h1>
-                <p class="text-white-50 mb-0 small">Browse your collections</p>
+                <h1 class="text-white mb-1">{{ 'My Galleries' if current_view == 'my' else 'All Galleries' }}</h1>
+                <p class="text-white-50 mb-0 small">{{ 'Browse your collections' if current_view == 'my' else 'Browse all collections' }}</p>
             </div>
             <div class="d-flex gap-2">
+                {% if session.role != 'guest' %}
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addGalleryModal">
                     + Add Gallery
                 </button>
+                {% endif %}
                 <a href="/" class="btn btn-primary">Home</a>
             </div>
         </div>
+
+        {% if session.role != 'guest' %}
+        <div class="btn-group mb-4 w-100" role="group">
+            <a href="{{ url_for('gallery.list_galleries', view='my') }}" class="btn btn-lg {{ 'btn-primary' if current_view == 'my' else 'btn-outline-primary' }}">My Galleries</a>
+            <a href="{{ url_for('gallery.list_galleries', view='all') }}" class="btn btn-lg {{ 'btn-primary' if current_view == 'all' else 'btn-outline-primary' }}">All Galleries</a>
+        </div>
+        {% endif %}
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for gallery in galleries %}
@@ -46,10 +56,17 @@
                         </a>
                         <h5 class="card-title fw-semibold">{{ gallery.name }}</h5>
                         <p class="card-text flex-grow-1">{{ gallery.description }}</p>
-                        <small class="card-text mt-2">{{ gallery.created_at }}</small>
+                        <small class="card-text mt-2">{{ gallery.created_at.strftime('%Y-%m-%d %H:%M:%S') if gallery.created_at is not string else gallery.created_at.split('.')[0] }}</small>
                     </div>
                     <div class="card-footer bg-dark bg-opacity-25 border-top border-secondary">
-                        <a href="{{ url_for('gallery.retrieve_gallery', gallery_id=loop.index0) }}" class="btn btn-sm btn-primary w-100">View Gallery</a>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('gallery.retrieve_gallery', gallery_id=gallery.id) }}" class="btn btn-sm btn-primary flex-grow-1">View Gallery</a>
+                            {% if session.role != 'guest' and (session.username == gallery.owner or session.get('admin')) %}
+                            <form action="{{ url_for('gallery.delete_gallery', gallery_id=gallery.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this gallery? All images and comments will be permanently removed.');">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
