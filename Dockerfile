@@ -18,7 +18,7 @@ ENV PGDATABASE=sparrow \
     GMAIL_ADDRESS=sparrowedsparrow@gmail.com \
     GMAIL_APP_PASSWORD=overwriteme
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=/auth/gcs-key.json \
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/gcs-key.json \
     GCS_BUCKET_NAME=sparrow-flask-images-2025
 
 CMD ["python", "app.py"]
