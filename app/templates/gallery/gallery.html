@@ -8,11 +8,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
     <style>
-        body {
-            background: linear-gradient(135deg, {{ gallery.background_color or '#00aa55' }} 0%, #0f0a3a 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
+        html { background: linear-gradient(135deg, {{ gallery.background_color or '#00aa55' }} 0%, #0f0a3a 100%) !important; background-attachment: fixed !important; }
+        body { background: none !important; }
         .card { background: var(--secondary-color); border-color: var(--input-border); overflow: hidden; }
         .card:hover { border-color: var(--accent-color); }
         .card-img-top { height: 220px; object-fit: cover; }
