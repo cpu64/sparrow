@@ -193,7 +193,7 @@
                                             <label style="margin-left: 10px;">
                                             <input type="radio" name="{{field}}" value="0" {% if not data[field] and data[field] is not none %} checked {% endif %}> Female </label>
                                         {% elif field == 'password' %}
-                                            <input class="text-input" type="text" name="{{field}}" value="">
+                                            <input class="text-input" type="password" name="{{field}}" value="">
                                         {% else %}
                                             <input class="text-input" type="text" name="{{field}}" value="{{data[field] if data[field] else ''}}">
                                         {% endif %}
