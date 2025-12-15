@@ -7,38 +7,166 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.svg') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 30px;
+        }
+
+        .action-button {
+            margin: 15px 0;
+            padding: 12px 20px;
+            background-color: var(--accent-color);
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 16px;
+            text-transform: uppercase;
+            transition: background-color 0.3s, transform 0.1s;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        .action-button:hover {
+            background-color: #0056b3;
+        }
+
+        .action-button:active {
+            transform: scale(0.98);
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .column {
+            flex: 0 0 48%;
+            margin-bottom: 10px;
+        }
+
+        .column a {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .column {
+                flex: 0 0 100%;
+            }
+        }
+
+        .profile-box {
+            background-color: var(--input-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .profile-box p {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        .profile-box a {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .profile-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
     {% include 'includes/flash_messages.html' %}
 
-    <h1>Welcome {{ username }}!</h1>
-    <p>Your role is: {{ role }}</p>
-    <a href="{{ url_for('logout.logout') }}">
-        <button class="action-button">Log out</button>
-    </a>
-    <br>
-    <a href="{{ url_for('profile.profile', user=username) }}">
-        <button class="action-button">Profile</button>
-    </a>
-    <br>
-    <a href="{{ url_for('postfeed.postfeed') }}">
-        <button class="action-button">View Posts</button>
-    </a>
-    <br>
-    <a href="{{ url_for('dms.dms') }}">
-        <button class="action-button">Direct messages</button>
-    </a>
-    <br>
-    <a href="{{ url_for('gallery.list_galleries', user=username) }}">
-        <button class="action-button">Gallery</button>
-    </a>
-    {% if role == 'admin' %}
-    <br>
-    <a href="{{ url_for('avatars.avatars') }}">
-        <button class="action-button">Avatar Management</button>
-    </a>
-    {% endif %}
+    <div class="container">
+        <h1>Welcome, {{ username }}!</h1>
+        <div class="profile-box">
+            <p>Your role is: <strong>{{ role }}</strong></p>
+            <div class="row">
+                <div class="column">
+                    <a href="{{ url_for('postfeed.postfeed') }}">
+                        <button class="action-button">View Posts</button>
+                    </a>
+                </div>
+                <div class="column">
+                    <a href="{{ url_for('gallery.list_galleries', user=username) }}">
+                        <button class="action-button">Gallery</button>
+                    </a>
+                </div>
+            </div>
+
+            {% if role != 'guest' %}
+                <div class="row">
+                        <div class="column">
+                            <a href="{{ url_for('profile.profile', user=username) }}">
+                                <button class="action-button">Profile</button>
+                            </a>
+                        </div>
+                        <div class="column">
+                            <a href="{{ url_for('dms.dms') }}">
+                                <button class="action-button">Direct Messages</button>
+                            </a>
+                        </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                {% if role == 'guest' %}
+                    <div class="column">
+                        <a href="{{ url_for('login.login') }}">
+                            <button class="action-button">Log in</button>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="column">
+                        <a href="{{ url_for('logout.logout') }}">
+                            <button class="action-button">Log out</button>
+                        </a>
+                    </div>
+                {% endif %}
+                {% if role == 'admin' %}
+                <div class="column">
+                    <a href="{{ url_for('avatars.avatars') }}">
+                        <button class="action-button">Avatar Management</button>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
