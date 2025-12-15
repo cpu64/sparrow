@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
     <style>
-        body {
-            background: linear-gradient(135deg, {{ gallery.background_color or '#00aa55' }} 0%, #0f0a3a 100%);
-            min-height: 100vh;
-        }
+        html { background: linear-gradient(135deg, {{ gallery.background_color or '#00aa55' }} 0%, #0f0a3a 100%) !important; background-attachment: fixed !important; }
+        body { background: none !important; }
         .card { background: var(--secondary-color); border-color: var(--input-border); overflow: hidden; }
         .card:hover { border-color: var(--accent-color); }
         .card-img-top { height: 220px; object-fit: cover; }
@@ -20,6 +18,7 @@
         .form-control, .form-control:focus { background-color: var(--input-bg); color: var(--font-primary-color); border-color: var(--input-border); }
         .form-control:focus { background-color: #fffcc8; color: #000000; border-color: var(--input-focus); }
         .form-control::placeholder { color: #888; }
+        .owner-avatar { max-height: 50px; }
     </style>
 </head>
 <body>
@@ -31,9 +30,9 @@
                 <div class="flex-grow-1">
                     <a href="{{ url_for('profile.profile', user=gallery.owner) }}" title="View {{ gallery.owner }}'s profile">
                         {% if gallery.owner_avatar %}
-                            <img src="{{ gallery.owner_avatar }}" alt="{{ gallery.owner }}'s Avatar">
+                            <img src="{{ gallery.owner_avatar }}" alt="{{ gallery.owner }}'s Avatar" class="owner-avatar">
                         {% else %}
-                            <img src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}" alt="Default Avatar">
+                            <img src="{{ url_for('static', filename='iconmonstr-user-circle-thin.svg') }}" alt="Default Avatar" class="owner-avatar">
                         {% endif %}
                     </a>
                     <h1 class="text-white fw-bold mb-3">{{ gallery.name }}</h1>

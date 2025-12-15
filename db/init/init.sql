@@ -432,6 +432,8 @@ COPY sparrow.chats (id, name, created_at, updated_at) FROM stdin;
 --
 
 COPY sparrow.galleries (id, name, description, background_color, created_at, updated_at, user_id) FROM stdin;
+1	Dogs	Adorable dogs	#FF6B35	2025-12-03 09:52:14.160574	2025-12-10 09:52:14.160574	2
+2	Cats	Funny cats	#4ECDC4	2025-12-07 09:52:14.160574	2025-12-13 09:52:14.160574	3
 \.
 
 
@@ -440,6 +442,12 @@ COPY sparrow.galleries (id, name, description, background_color, created_at, upd
 --
 
 COPY sparrow.image_comments (id, text, created_at, user_id, image_id) FROM stdin;
+1	This made me laugh!	2025-12-10 09:52:14.160574	1	1
+2	So peaceful!	2025-12-08 09:52:14.160574	3	2
+3	That look though 😂	2025-12-11 09:52:14.160574	2	3
+4	Absolutely hilarious	2025-12-12 09:52:14.160574	1	4
+5	Too cute!	2025-12-14 09:52:14.160574	2	5
+6	Best photo ever	2025-12-14 21:52:14.160574	3	5
 \.
 
 
@@ -448,6 +456,11 @@ COPY sparrow.image_comments (id, text, created_at, user_id, image_id) FROM stdin
 --
 
 COPY sparrow.images (id, name, url, description, location, taken_at, created_at, gallery_id) FROM stdin;
+1	Suspicious pup	https://storage.googleapis.com/sparrow-flask-images-2025/images/793e3889-ee40-4984-8c25-45af1ce0a99c.jpg	Side-eye dog	Living room	2025-11-20	2025-12-03 09:52:14.160574	1
+2	Peaceful lab	https://storage.googleapis.com/sparrow-flask-images-2025/images/88469124-7e84-49ef-9d6b-187ca44e23f3.jpg	Zen moment	Backyard	2025-11-25	2025-12-05 09:52:14.160574	1
+3	Judging you	https://storage.googleapis.com/sparrow-flask-images-2025/images/2f7e7254-4541-4713-8fb3-c1d21f0c9530.jpg	Judgmental cat	Kitchen	2025-12-01	2025-12-07 09:52:14.160574	2
+4	Unfair battle	https://storage.googleapis.com/sparrow-flask-images-2025/images/9dbfed52-633e-415b-ad0e-60148eba21c7.jpg	Cat vs lion	Studio	2025-12-03	2025-12-09 09:52:14.160574	2
+5	Kitten fight	https://storage.googleapis.com/sparrow-flask-images-2025/images/140e1d60-b96b-4e87-a456-fe68e44b30d2.jpg	Play fighting	Office	2025-12-05	2025-12-13 09:52:14.160574	2
 \.
 
 
@@ -571,21 +584,21 @@ SELECT pg_catalog.setval('sparrow.chats_id_seq', 2, true);
 -- Name: galleries_id_seq; Type: SEQUENCE SET; Schema: sparrow; Owner: sparrow
 --
 
-SELECT pg_catalog.setval('sparrow.galleries_id_seq', 1, false);
+SELECT pg_catalog.setval('sparrow.galleries_id_seq', 2, true);
 
 
 --
 -- Name: image_comments_id_seq; Type: SEQUENCE SET; Schema: sparrow; Owner: sparrow
 --
 
-SELECT pg_catalog.setval('sparrow.image_comments_id_seq', 1, false);
+SELECT pg_catalog.setval('sparrow.image_comments_id_seq', 6, true);
 
 
 --
 -- Name: images_id_seq; Type: SEQUENCE SET; Schema: sparrow; Owner: sparrow
 --
 
-SELECT pg_catalog.setval('sparrow.images_id_seq', 1, false);
+SELECT pg_catalog.setval('sparrow.images_id_seq', 5, true);
 
 
 --
