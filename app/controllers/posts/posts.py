@@ -69,11 +69,10 @@ createpost_bp = Blueprint("createpost", __name__)
 
 @createpost_bp.route("/create", methods=["GET", "POST"])
 def create_post():
+    if session.get("role") == "guest" or not session.get("username"):
+        flash("You must be logged in to create posts", "error")
+        return redirect(url_for("login.login"))
     if request.method == "POST":
-        if session.get("role") == "guest" or not session.get("username"):
-            flash("You must be logged in to comment", "error")
-            return redirect(url_for("login.login"))
-
         content = request.form["content"]
         text_color = request.form["text_color"]
         text_font_id = request.form["text_font"]

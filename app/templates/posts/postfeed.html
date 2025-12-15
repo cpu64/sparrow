@@ -15,9 +15,11 @@
         <a href="{{ url_for('home.home') }}">
             <button class="action-button">Home</button>
         </a>
-        <a href="{{ url_for('createpost.create_post') }}">
-            <button class="action-button">Create Post</button>
-        </a>
+        {% if session.role != 'guest' %}
+            <a href="{{ url_for('createpost.create_post') }}">
+                <button class="action-button">Create Post</button>
+            </a>
+        {% endif %}
     </div>
 
     <div class="post-feed">
